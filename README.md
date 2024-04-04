@@ -21,10 +21,6 @@ https-content.xml : mvc 관련파일을 C:\workspaces\08_spring-workspace\.metad
 
 스프링에서는 3번째 레벨까지 파일명을 작성해야 finish 버튼이 활성화됨
 
-- 라이브러리 다운된 곳
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/0d5eb3b6-72a2-4651-99fa-511798047979/6e39a77d-96ee-4ef9-acad-74ca6288869a/Untitled.png)
-
 - pom.xml 수정 후 해야될 것
 
 항상 pom.xml에서 자바, 스프링 버전 수정하기
