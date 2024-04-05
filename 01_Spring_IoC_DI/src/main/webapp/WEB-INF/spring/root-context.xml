@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean class="com.br.spring.di.Phone" id="phone1">
+		<property name="name" value="아이폰 15 pro" />
+		<property name="brand" value="Apple" />
+		<property name="price" value="1300000" />
+		<property name="releaseDate" value="2023-09-12" />
+	</bean>
+
+	<!-- phone2라는 이름으로 갤럭시s24, Samsung, 1600000, 2024-02-13이라는 값을 생성자 주입해서 빈으로 
+		등록하시오. -->
+	<bean class="com.br.spring.di.Phone" id="phone2">
+		<constructor-arg value="갤럭시s24" />
+		<constructor-arg value="Samsung" />
+		<constructor-arg value="1600000" />
+		<constructor-arg value="2024-02-13" />
+	</bean>
+
+	<bean class="com.br.spring.ioc.xml.Calculator" id="calc"/>
+
+	<bean class="com.br.spring.ioc.xml.Student" id="student">
+		<property name="name" value="김디디"></property>
+		<property name="academy" value="디디아카데미"></property>
+		<property name="classColor" value="하늘색"></property>
+		<property name="calc" ref="calc"></property>
+	</bean>
+</beans>
