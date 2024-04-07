@@ -68,6 +68,6 @@
 	 
 	 <!-- studentDao라는 이름으로 빈 등록 -->
 	 <!-- scope="prototype"은 주소값이 매번 다르게 되고, singleton은 매번 주소값이 같음 -->
-	 <bean class="com.br.spring.ioc.xml.StudentDao" id="studentDao"<!--  scope="singleton" -->/>
+	 <bean class="com.br.spring.ioc.xml.StudentDao" id="studentDao"/><!--  scope="singleton" -->
 	 
 </beans>
