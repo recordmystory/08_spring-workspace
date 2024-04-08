@@ -70,11 +70,11 @@
 	 <!-- scope="prototype"은 주소값이 매번 다르게 되고, singleton은 매번 주소값이 같음 -->
 	 <bean class="com.br.spring.ioc.xml.StudentDao" id="studentDao"/><!--  scope="singleton" -->
 	 
-	 <bean class="com.br.spring.di.Animal" id="animal">
-<!-- 	 		<property name="name" value="초코"/>
-	 		<property name="kind" value="강아지"/> -->
+	 <!-- <bean class="com.br.spring.di.Animal" id="animal">
+	 		<property name="name" value="초코"/>
+	 		<property name="kind" value="강아지"/>
 	 		<constructor-arg value="초코"/>
 	 		<constructor-arg value="강아지"/>
-	 </bean>
+	 </bean> -->
 	 
 </beans>

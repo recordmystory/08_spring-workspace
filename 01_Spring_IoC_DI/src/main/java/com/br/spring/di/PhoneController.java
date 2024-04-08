@@ -198,4 +198,34 @@ public class PhoneController {
 	
 	*/
 	
+//	@Autowired
+//	private Phone phone3;
+//	
+//	@RequestMapping("/test2")
+//	public void diTest2() {
+//		System.out.println(phone3);
+//	}
+	
+	// 직접 객체 생성할 경우 (스프링 사용 전)
+	// private PhoneService pService = new PhoneServiceWebImpl();
+			// new PhoneServiceMobileImpl(); // 모바일용 개발시
+	
+	// 개발자가 직접 객체 생성할 경우 결합도가 높아짐 -> 문제 발생
+	// 결합도 (종속관계) : 연관관계의 클래스들 간 각 클래스 수정시 서로에게 영향을 미치는 정도
+	
+	// ex) public class A {private B b;}
+	// 		public class B {}
+	// 만일 B 클래스 수정시 A 클래스도 일부 수정해야되는 상황이 발생할 때
+	//		=> 두 객체간에 결합도가 강하다라고 표현
+	
+	// * 해당 서비스 객체를 스프링 관리할 수 있게끔 빈으로 등록하고 (IoC)
+	// @Autowired 어노테이션으로 생성된 객체를 주입받는 경우 (di) (스프링 사용 후)
+	@Autowired
+	private PhoneService pService; // 웹용 인터페이스를 구현하는 클래스에 @Service 어노테이션을 작성했기 때문에 인터페이스 주입됨
+	
+	@RequestMapping("/test3")
+	public void diTest3() {
+		pService.selectDetail();
+		pService.selectList();
+	}
 }
