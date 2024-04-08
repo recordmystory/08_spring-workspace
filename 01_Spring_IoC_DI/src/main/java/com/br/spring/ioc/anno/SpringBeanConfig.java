@@ -3,6 +3,8 @@ package com.br.spring.ioc.anno;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.br.spring.di.Animal;
+
 /*
  * * @Configuration 
  * - Spring Bean Configuration File의 역할을 대신해주는 java 클래스에게 부여하는 어노테이션
@@ -47,5 +49,10 @@ public class SpringBeanConfig {
 	@Bean(name="singer2")
 	public Singer Singer2() {
 		return new Singer("르세라핌", music2());
+	}
+	
+	@Bean(name="animal") // name값이 bean 이름으로 잡힘
+	public Animal aaa() {
+		return new Animal("야옹", "고양이");
 	}
 }

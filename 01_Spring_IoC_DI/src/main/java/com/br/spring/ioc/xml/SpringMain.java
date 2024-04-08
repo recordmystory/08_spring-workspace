@@ -1,7 +1,11 @@
 package com.br.spring.ioc.xml;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+
+import com.br.spring.di.Animal;
+import com.br.spring.ioc.anno.SpringBeanConfig;
 
 public class SpringMain {
 	public static void main(String[] args) {
@@ -65,5 +69,11 @@ public class SpringMain {
 		StudentDao sDao1 = ctx.getBean("studentDao", StudentDao.class);
 		System.out.println(sDao1);
 		sDao1.insertStudent(stu1);
+		
+		GenericXmlApplicationContext ctx2 = new GenericXmlApplicationContext("classpath:xml/appCtx.xml"); // xml 파일 내에 빈 읽기
+		ctx2.getBean("animal", Animal.class);
+	
+		AbstractApplicationContext ctx3 = new AnnotationConfigApplicationContext(SpringBeanConfig.class); // xml 파일 내에 빈 읽기
+		
 	}
 }

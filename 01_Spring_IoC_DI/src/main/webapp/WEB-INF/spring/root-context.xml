@@ -28,4 +28,6 @@
 		<property name="classColor" value="하늘색"></property>
 		<property name="calc" ref="calc"></property>
 	</bean>
+	
+	<!-- root-context.xml 파일에 bean을 등록할 경우 읽어들이는 코드를 작성할 필요없이 서버 start시에 불ㄹ러올 수 있음 -->
 </beans>

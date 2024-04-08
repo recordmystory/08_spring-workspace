@@ -166,22 +166,36 @@ public class PhoneController {
 		  Student 필드 출력 해보기
 	 */
 	
-	@Autowired
-	private Calculator calc;
-	@Autowired
-	private Student student;
-	
-	public void CalculatorController(Calculator calc, Student student) {
-		this.calc = calc;
-		this.student = student;
-	}
-	
-	@RequestMapping("/example")
-	public void goExample() {
-		calc.plus(10, 10);
-		calc.minus(10, 10);
-		calc.mul(10, 10);
+	/*
+	 
+		@Autowired
+		private Calculator calc;
+		@Autowired
+		private Student student;
 		
-		System.out.println(student);
-	}
+		public void CalculatorController(Calculator calc, Student student, Animal a) { // @Autowired 어노테이션 생략 가능
+			this.calc = calc;
+			this.student = student;
+			this.a = a;
+		}
+		
+		@RequestMapping("/example")
+		public void goExample() {
+			calc.plus(10, 10);
+			calc.minus(10, 10);
+			calc.mul(10, 10);
+			
+			System.out.println(student);
+		}
+		
+		@Autowired
+		private Animal a; // 필드 주입 : 특정 클래스안에 필드가 많을 경우 각각 주입을 받아야된다면 어노테이션을 많이 작성해야됨, 필드가 몇 개 없을 경우에만 필드 주입 사용
+		
+		@Autowired
+		public void setA(Animal a) {
+			this.a = a;
+		}
+	
+	*/
+	
 }
