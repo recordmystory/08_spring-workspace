@@ -49,7 +49,6 @@
 		<button type="submit">제출</button>
 	</form><br><br>
 
-	<hr>
 	<!-- @RequestParam 이용하는 방법 -->
 	<form action="${contextPath}/member/enroll2.do" method="post">
 		이름 : <input type="text" name="name"><br>
@@ -57,5 +56,18 @@
 		주소 : <input type="text" name="address"><br><br>
 		<button type="submit">제출</button>
 	</form><br><br>
+	
+	<!-- 커맨드 객체 방법 -->
+	<form action="${contextPath}/member/enroll3.do" method="post">
+		이름 : <input type="text" name="name"><br>
+		나이 : <input type="text" name="age"><br>
+		주소 : <input type="text" name="addr"><br><br>
+		<button type="submit">제출</button>
+	</form><br><br>
+	
+	<hr>
+	
+	<h3>4. 종합예시 (IoC + DI + MVC)</h3>
+	<!-- 공지사항 서비스 -->
 </body>
 </html>
