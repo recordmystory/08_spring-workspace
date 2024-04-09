@@ -36,5 +36,26 @@
 	<a href="${contextPath}/book/list.do">도서목록 페이지로 이동</a><br>
 	<a href="${contextPath}/book/enrollForm.do">도서등록 페이지로 이동</a>
 	
+	<h3>3. 요청시 전달되는 값(파라미터) 받기 연습</h3>
+	
+	<!-- HttpServletRequest 방법 -->
+	<a href="${contextPath}/member/detail.do?no=1">회원상세조회</a>
+	<br><br>
+	
+	<form action="${contextPath}/member/enroll1.do" method="post">
+		이름 : <input type="text" name="name"><br>
+		나이 : <input type="text" name="age"><br>
+		주소 : <input type="text" name="address"><br><br>
+		<button type="submit">제출</button>
+	</form><br><br>
+
+	<hr>
+	<!-- @RequestParam 이용하는 방법 -->
+	<form action="${contextPath}/member/enroll2.do" method="post">
+		이름 : <input type="text" name="name"><br>
+		나이 : <input type="text" name="age"><br>
+		주소 : <input type="text" name="address"><br><br>
+		<button type="submit">제출</button>
+	</form><br><br>
 </body>
 </html>
