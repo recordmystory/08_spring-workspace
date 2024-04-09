@@ -69,5 +69,6 @@
 	
 	<h3>4. 종합예시 (IoC + DI + MVC)</h3>
 	<!-- 공지사항 서비스 -->
+	<a href="${contextPath}/notice/list.do">공지사항 목록 페이지로 이동</a>
 </body>
 </html>
