@@ -60,8 +60,9 @@ public class MvcController {
 		System.out.println("MvcController 클래스의 abcd 메소드 실행됨");
 		
 		// /WEB-INF/views/main.jsp로 포워딩
-		return "main"; 
+		return "/main"; 
 		
 		// 반환되는 값은 사실상 DispatcherServlet의 ViewResolver로 전달됨
 	}
+
 }

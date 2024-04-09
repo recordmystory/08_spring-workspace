@@ -45,6 +45,7 @@
 			* component-scan
 			
 			base-package로 작성되어있는 package 내의 모든 클래스들을 스캔하면서 component(@Service, @Controller, @Repository) 어노테이션이 붙은 클래스들을 자동으로 빈으로 등록시켜주는 태그
+	 		빈스캐닝과 관련된 태그
 	 -->
 	<context:component-scan base-package="com.br.mvc" />
 	

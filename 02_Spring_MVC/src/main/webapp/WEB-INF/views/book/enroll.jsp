@@ -7,14 +7,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>modify</title>
+<title>도서 등록</title>
 </head>
 <body>
-	<form action="${contextPath}/book/modify.do" method="post">
-		제목 : <input type="text" value="수학의 정석"><br>
-		저자 : <input type="text" value="김수학"><br>
-		
-		<button type="submit">수정</button>
+	<form action="${contextPath}/book/enroll.do" method="post">
+		제목 : <input type="text" name="title"><br>
+		저자 : <input type="text" name="author"><br>
+			<button type="submit">등록</button>
 	</form>
 </body>
 </html>
