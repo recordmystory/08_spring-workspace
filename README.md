@@ -399,3 +399,112 @@ Spring 4부터 지원
         ```
         
         jsp에서는 EL 표현법으로 출력하면 됨
+---
+#### 2024-04-11(목)
+- 조회는 주로 @GetMapping, 수정, 삭제 등은 @PostMapping
+
+### ModelAndView
+
+Model 객체와 View 객체가 합쳐져있는 형태
+Model은 데이터를 담는 영역의 객체라면 View는 응답뷰에 대한 정보를 담을 수 있는 영역의 객체 (단, View는 단독으로 사용 불가)
+ModelAndView 객체에 데이터와 응답뷰에 대한 정보 다 담고 해당 객체를 리턴하면 됨
+
+```java
+@GetMapping("/detail.do")
+	public ModelAndView noticeDetail(int no, ModelAndView mv) {
+		// 메소드 체이닝 가능
+		mv.addObject("n", noticeService.selectNoticeByNo(no)).setViewName("notice/detail");;
+		
+		return mv;
+	}
+```
+
+### Spring MVC 동작원리
+
+1. 클라이언트 요청 (request)
+2. 스프링에서 제공하는 DispatcherServlet이 요청을 먼저 받아줌 (FrontController 개념)
+3. DispatcherServlet이 요청을 처리할 Controller를 찾아주는 HandlerMapping을 내부적으로 호출함
+4. HandlerMapping은 요청을 처리할 Controller를 찾아 호출
+    
+    요청시 전달되는 값(파라미터) 처리하는 방법 (Controller에서 진행)
+    
+    - Spring 사용 전 : HttpServletRequest 객체로 전달받아 .getParameter(”키”)로 전달값 뽑아서 처리
+    - Spring 사용 후 : HttpServletRequest 객체를 이용할 수 있긴 하나 @RequestParam으로 바로 변수로 받을 수도 있고 커맨드객체 방식으로 객체의 필드로 바로 받을 수도 있음
+5. Controller는 비즈니스 로직 처리하는 Service 호출
+6. 요청 처리 완료 후 Contrller는 응답을 처리할 Model and View 세팅 
+    - Spring 사용 전 : 응답페이지 (포워딩 jsp)에서 필요한 데이터를 request에 담은 후 (setAttribute) RequestDistpatcher 이용해서 포워딩 진행
+    - Spring 사용 후 : 응답페이지상에 필요한 데이터를 Spring에서 제공하는 Model 객체에 담고 응답페이지에 대해서는 리턴하는 방식(String으로 리턴), ModelAndView에 같이  담는 방식(ModelAndView 리턴)
+    
+    Model : 데이터를 담을 수 있는 영역 (requestScope)
+    
+    → Model은 보안적인 부분이 request보다 조금 더 향상된 객체
+    
+    View : 응답뷰를 담을 수 있는 영역
+    
+7. Controller에서는 ModelAndView 객체를 Dispatcher로 전달
+8. DispatcherServlet은 해당 뷰 정보를 ViewResolver에게 전달
+9. ViewResolver는 전달받은 뷰 정보를 갖고 prefix, suffix 값 붙여서 응답할 View 객체 생성
+10. 해당 응답 뷰가 클라이언트에게 보여짐
+
+## Spring Ajax
+
+### pom.xml
+
+- ajax를 위한 jackson databind 라이브러리 추가
+
+데이터를 연결, 저장 변환 해주는 라이브러리
+
+자바에서의 bean(객체) / map을 json 또는 xml 형식으로 변환시켜줌
+
+https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind/2.14.2
+
+### 회원관리 페이지 (회원관리1, 회원관리2)
+
+- @ResponseBody
+
+비동기식으로 데이터 응답시 필요한 어노테이션
+
+해당 어노테이션 붙은 메소드에서 리턴되는 값은 뷰명(jsp)가 아니라 어떤 data(text, json, xml, …)라는 걸 의미
+
+해당 어노테이션 사용 시 @GetMapping 어노테이션 안에 produces=”text/html; charset=utf-8 작성 안하면 한글 깨짐
+
+- serialize()
+
+직렬화해주는 메소드
+
+```java
+data: $("#member_form").serialize()
+```
+
+- @RestController
+
+이 클래스 안에 모든 메소드들에 전부 @ResponseBody가 붙여진채로 동작함
+
+### 출력문 대신 로그 사용 : LogBack
+
+[Logback Manual](https://logback.qos.ch/manual/index.html)
+
+[](https://mvnrepository.com/artifact/ch.qos.logback/logback-classic)
+
+출력문을 과다하게 사용하면 성능 측면에서 과부하가 올 수 있음
+
+- pom.xml에 LogBack 라이브러리 추가
+
+- logback.xml
+    1. appender : 전달된 로그를 어느 위치에 출력할건지 결정하는 태그 
+        
+        ConsoleAppender : 로그를 콘솔에 출력
+        - JDBCAppender : 로그를 RDB에 출력
+        - FileAppender : 로그를 파일에 출력
+        - RollingFileAppender : 로그를 매일 새로운 파일에 출력
+        
+    2. logger / root : 출력할 메세지를 appender에 전달하는 역할
+        
+        name 속성 : 로그주체(로그가 발생되는 클래스)
+        level 속성 : 로그 레벨 설정
+        
+        debug : 개발 시 디버그 용으로 사용하는 메세지
+        info : 정보성 메시지
+        warn : 지금 당장의 문제는 없지만 향후 시스템 에러의 원인이 될만한 것의 경고성 메시지
+        error : 어떤 요청 처리 중 발생된 문제에 대한 메시지
+        fatal : 아주 심각한 에러 메시지
