@@ -295,3 +295,107 @@ HandlerMapping과 HandlerAdapter가 자동으로 빈으로 등록시켜줌
 
 base-package로 작성되어있는 package 내의 모든 클래스들을 스캔하면서 component(@Service, @Controller, @Repository) 어노테이션이 붙은 클래스들을 자동으로 빈으로 등록시켜주는 태그
 
+---
+#### 2024-04-09(화)
+- @GetMapping 어노테이션
+
+Spring 4부터 지원
+
+@RequestMapping과 똑같은 역할을 함
+
+- Controller에서 파라미터 값 받아오기
+1. HttpServletRequest 방법
+    
+    매핑해주는 어노테이션이 붙은 메소드 내에 파라미터로 HttpServletRequest request 작성 후 request.getParameter로 받는 방법
+    
+
+- 스프링에서 제공하는 인코딩 필터 등록
+
+```xml
+<filter>
+      <filter-name>encodingFilter</filter-name>
+      <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+      <init-param>
+         <param-name>encoding</param-name>
+         <param-value>UTF-8</param-value>
+      </init-param>
+   </filter>
+   
+   <filter-mapping>
+      <filter-name>encodingFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
+```
+
+1. @RequestParam 이용하는 방법 (Spring에서 제공)
+    
+    @RequestParam  : request.getParameter를 대신해주는 어노테이션
+    
+    ```java
+    @PostMapping("/enroll2.do")
+    	public String memberEnroll2(@RequestParam(value="name") String name, @RequestParam(value="age") int age, @RequestParam(value="address") String addr) {
+    		// 실행시킬 코드 작성
+    	}
+    ```
+    
+    1. 커맨드 객체
+        
+        커맨드 객체란 요청 파라미터들을 각 필드에 담고자 하는 객체
+        
+        내부적으로 해당 객체 기본생성자로 생성한 후에 각 필드의 setter 메소드로 전달값이 필드에 주입됨
+        단, 전달되는 값의 키값이 담고자하는 필드의 필드명과 같아야됨!
+        
+        메소드의 매개변수로 객체 넣어야함
+        
+    
+    - @RequestParam 사용시 int형 변수값이 비어있을 때 NumberFormatException이 뜨는데, 해결 방법
+    1. int형 변수를 String형 변수로 선언
+    2.  기본값 작성하기
+    
+    ```java
+    @RequestParam(value=”age”, defaultValue=”50”)
+    ```
+    
+    - 롬복(lombok) 사용
+        
+        vo에 필드만 적고 생성자, getter/setter 생성 안해도됨 → 롬복이 대신 생성해줌
+        
+        C:\Users\GD\.m2\repository\org\projectlombok\lombok\1.18.24 
+        
+        집에가서 installer로 다시 설치하기
+        
+        ![lombok_jar](https://github.com/recordmystory/08_spring-workspace/assets/113417749/b31ff03c-91f9-4288-9c46-4ed1ab29a938)
+        
+        - @Getter, @Setter, @ToString, @NoArgsConstructor, @AllArgsConstructor 어노테이션 사용해 vo 작성 가능
+        
+        ![lombok_eclipse](https://github.com/recordmystory/08_spring-workspace/assets/113417749/5f6b09b0-2aac-46f1-b7da-b09ce01f2188)
+        
+        - 롬복 사용시 getter/setter 메소드명 때문에 필드명 소문자 두 글자 이상으로 작성하기
+        
+        - @Builder : 생성자 대신 빌더 어노테이션을 사용하면 객체를 좀 더 편하게 생성 가능함
+        
+        ```java
+        NoticeDto n = NoticeDto.builder()
+				.title("제목")
+				.content("내용")
+				.no(1)
+        			.build();
+        ```
+        
+        매개변수 순서 상관없음
+        
+        - @RequiredArgsConstructor : 초기화 되지 않은 final 필드에만 생성자를 생성해줌
+        
+    - 모델에 데이터담기
+        
+        서블릿에서 하던 request.setAttribute 대신 model.addAttribute() 사용
+        
+        ```java
+        @GetMapping("/list.do")
+        	public String noticeList(Model model) {
+        		model.addAttribute("list", noticeService.selectNoticeList());
+        		return "notice/list";
+        	}
+        ```
+        
+        jsp에서는 EL 표현법으로 출력하면 됨
