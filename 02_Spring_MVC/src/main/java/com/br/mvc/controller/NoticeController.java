@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.br.mvc.dto.NoticeDto;
 import com.br.mvc.service.NoticeService;
@@ -36,10 +37,29 @@ public class NoticeController {
 		return "notice/list";
 	}
 	
+	/*
+		@GetMapping("/detail.do")
+		public String noticeDetail(int no, Model model) {
+			
+			model.addAttribute("n", noticeService.selectNoticeByNo(no));
+			return "notice/detail";
+		}
+	*/
+	
+	/*
+	 * 2. ModelAndView 객체 이용하기
+	 * 	  Model 객체와 View 객체가 합쳐져있는 형태
+	 * 	  Model은 데이터를 담는 영역의 객체라면 View는 응답뷰에 대한 정보를 담을 수 있는 영역의 객체 (단, View는 단독으로 사용 불가)
+	 * 
+	 * 	  ModelAndView 객체에 데이터와 응답뷰에 대한 정보 다 담고 해당 객체를 리턴하면 됨
+	 */
+	
+
 	@GetMapping("/detail.do")
-	public String noticeDetail(@RequestParam(value="no") int no, Model model) {
+	public ModelAndView noticeDetail(int no, ModelAndView mv) {
+		// 메소드 체이닝 가능
+		mv.addObject("n", noticeService.selectNoticeByNo(no)).setViewName("notice/detail");;
 		
-		model.addAttribute("n", noticeService.selectNoticeByNo(no));
-		return "notice/detail";
+		return mv;
 	}
 }

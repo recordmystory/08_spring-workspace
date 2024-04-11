@@ -10,8 +10,15 @@
 <title>공지사항 상세</title>
 </head>
 <body>
-		번호 : ${n.no}<br>
-		제목 : ${n.title}<br>
-		내용 : ${n.content}<br>
+	<c:choose>
+		<c:when test="${empty n}">
+			조회 결과가 없습니다.
+		</c:when>
+		<c:otherwise>	
+			번호 : ${n.no}<br>
+			제목 : ${n.title}<br>
+			내용 : ${n.content}<br>
+		</c:otherwise>
+	</c:choose>
 </body>
 </html>

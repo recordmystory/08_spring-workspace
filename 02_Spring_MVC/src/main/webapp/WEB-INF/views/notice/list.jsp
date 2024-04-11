@@ -2,12 +2,17 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <meta charset="UTF-8">
 <title>공지사항 목록</title>
+<style>
+	tr:hover{
+		cursor: pointer;
+	}
+</style>
 </head>
 <body>
 	<table border="2">
@@ -27,8 +32,8 @@
 				</c:when>
 				<c:otherwise>
 					<c:forEach var="n" items="${list}">
-						<tr onclick="location.href='${contextPath}/notice/detail.do?no=${n.no}'">
-							<td>${n.no}</td>
+						<tr><!--  onclick="location.href='${contextPath}/notice/detail.do?no=${n.no}'" -->
+							<td class="notice_no">${n.no}</td>
 							<td>${n.title}</td>
 							<td>${n.content}</td>
 						</tr>
@@ -37,5 +42,13 @@
 			</c:choose>
 		</tbody>
 	</table>
+	
+	<script>
+		$(document).ready(function(){
+			$("tbody tr").on("click", function(){
+				location.href = "${contextPath}/notice/detail.do?no=" + $(this).children(".notice_no").text();
+			});
+		});
+	</script>
 </body>
 </html>
