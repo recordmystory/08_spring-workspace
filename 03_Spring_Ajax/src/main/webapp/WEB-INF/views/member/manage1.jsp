@@ -148,6 +148,18 @@
 					}
 			});
 		};
+		
+		$(function(){
+				$.ajax({
+					url: "${contextPath}/member1/map.do",
+					success: function(map){
+						console.log(map);						
+					},
+					error: function(){
+						console.log("ajax 통신 실패");
+					}
+				});
+		});
 	</script>
 </body>
 </html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	
+	<!-- 
+			* 로깅
+			- 시스템의 작동 상태 또는 시스템의 동작들을 분석하기 위해서 기록을 남겨두는 게 좋음
+			- 사용자가 시스템을 이용하면서 발생되는 문제점들을 기록으로 남겨놔야 유지보수가 용이해짐
+			- 디버깅용으로 데이터들을 출력해볼 때 System.out.println으로 출력 시 성능저하를 야기시킴
+			
+			* 로깅의 장단점
+			> 장점 
+			- 프로그램 문제파악이 쉬워짐
+			- 빠르고 효율적인 디버깅 가능함
+			- 로그이력을 파일, 외부 DB에 남길 수 있음
+			
+			> 단점
+			- 로깅에 대한 코드로 전체 코드 사이즈가 증가
+			- 많은 로깅 출력은 혼란을 불러오거나 시스템에 과부하를 유발시킴
+			
+			* Logging Framework (log4j, logback, slf4j)
+	 -->
+
+	<!-- 
+		* appender : 전달된 로그를 어느 위치에 출력할건지 결정하는 태그 
+		
+		- ConsoleAppender : 로그를 콘솔에 출력
+		- JDBCAppender : 로그를 RDB에 출력
+		- FileAppender : 로그를 파일에 출력
+		- RollingFileAppender : 로그를 매일 새로운 파일에 출력
+		
+		* layout : 로그를 어떤 형식으로 출력할지 결정
+		- HTMLLayout
+		- DateLayout
+		- JSONLayout
+		- XMLLayout
+		- PatterLayout
+	-->	 
+	<appender class="ch.qos.logback.core.ConsoleAppender" name="consoleLog">
+		 <encoder>
+		 	<pattern>%-5level : [%date{yyyy-MM-dd HH:mm:ss.SSS}] [%logger{0}:%line] - %msg%n</pattern>
+		 </encoder>
+	</appender>
+	
+	<!-- 
+		* logger / root : 출력할 메세지를 appender에 전달하는 역할
+		
+			name 속성 : 로그주체(로그가 발생되는 클래스)
+			level 속성 : 로그 레벨 설정 (내가 설정한 이상의 레벨 전체 다 출력)
+			
+			debug : 개발 시 디버그 용으로 사용하는 메세지
+			info : 정보성 메시지
+			warn : 지금 당장의 문제는 없지만 향후 시스템 에러의 원인이 될만한 것의 경고성 메시지
+			error : 어떤 요청 처리 중 발생된 문제에 대한 메시지
+			fatal : 아주 심각한 에러 메시지
+	 -->
+	<logger name="org.springframework" level="INFO"/>
+	
+	<root level="WARN">
+		<appender-ref ref="consoleLog"/>
+	</root>	 
+
+</configuration>
