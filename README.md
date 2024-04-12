@@ -508,3 +508,57 @@ data: $("#member_form").serialize()
         warn : 지금 당장의 문제는 없지만 향후 시스템 에러의 원인이 될만한 것의 경고성 메시지
         error : 어떤 요청 처리 중 발생된 문제에 대한 메시지
         fatal : 아주 심각한 에러 메시지
+
+---
+#### 2024-04-12(금)
+### 로그 출력
+
+```java
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(MemberController1.class);
+	logger.debug("아이디 : {}, 비밀번호 : {}", id, pwd);
+```
+
+### Spring & MyBatis
+
+- pom.xml
+
+DB 관련 라이브러리 추가
+
+https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8/23.2.0.0
+
+https://mvnrepository.com/artifact/org.springframework/spring-jdbc/5.3.33
+
+https://mvnrepository.com/artifact/org.mybatis/mybatis/3.5.13
+
+https://mvnrepository.com/artifact/org.mybatis/mybatis-spring/2.0.6
+
+https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4.1/1.16
+
+- log4jdbc 공식 홈페이지
+
+https://log4jdbc.brunorozendo.com/
+
+- DB 계정 생성 (sbatis)
+
+```sql
+CREATE USER sbatis IDENTIFIED BY sbatis;
+
+GRANT RESOURCE, CONNECT TO sbatis;
+```
+
+```sql
+CREATE TABLE NOTICE(
+    NO NUMBER PRIMARY KEY,
+    TITLE VARCHAR2(50) NOT NULL,
+    CONTENT VARCHAR2(2000)
+);
+
+CREATE SEQUENCE SEQ_NNO;
+
+INSERT INTO NOTICE VALUES(SEQ_NNO.NEXTVAL, '제목1', '내용1');
+INSERT INTO NOTICE VALUES(SEQ_NNO.NEXTVAL, '제목2', '내용2');
+INSERT INTO NOTICE VALUES(SEQ_NNO.NEXTVAL, '제목3', '내용3');
+
+COMMIT;
+
+```
