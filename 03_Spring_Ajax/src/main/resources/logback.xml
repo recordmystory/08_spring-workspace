@@ -41,6 +41,18 @@
 		 </encoder>
 	</appender>
 	
+	<appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="rollingLog">
+		 <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			 	<fileNamePattern>/logs/ajax-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			 	<maxFileSize>10MB</maxFileSize>
+			 	<maxHistory>30</maxHistory>
+			 	<totalSizeCap>100GB</totalSizeCap>
+		 </rollingPolicy>
+		 <encoder>
+		 		<pattern>%-5level : [%date{yyyy-MM-dd HH:mm:ss.SSS}] [%logger{0}:%line] - %msg%n</pattern>
+		 </encoder>
+	</appender>
+	
 	<!-- 
 		* logger / root : 출력할 메세지를 appender에 전달하는 역할
 		
@@ -53,10 +65,11 @@
 			error : 어떤 요청 처리 중 발생된 문제에 대한 메시지
 			fatal : 아주 심각한 에러 메시지
 	 -->
-	<logger name="org.springframework" level="INFO"/>
-	
+	<logger name="org.springframework" level="info"/>
+	<logger name="com.br.ajax" level="debug"/>
 	<root level="WARN">
 		<appender-ref ref="consoleLog"/>
+		<appender-ref ref="rollingLog"/>
 	</root>	 
 
 </configuration>

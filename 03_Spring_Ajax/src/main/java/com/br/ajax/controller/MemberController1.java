@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +15,14 @@ import com.br.ajax.dto.MemberDto;
 import com.br.ajax.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/member1")
 @Controller
 public class MemberController1 {
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(MemberController1.class);
 	private final MemberService memberService;
 
 	// @ResponseBody : 비동기식으로 데이터 응답시 필요한 어노테이션
@@ -26,7 +30,8 @@ public class MemberController1 {
 	@ResponseBody 
 	@GetMapping(value="/detail1.do", produces="text/html; charset=utf-8")
 	public String memberDetail1(String id, String pwd/* , HttpServletResponse response */) throws IOException{ // 어노테이션 생략시 키값과 동일한 이름의 매개변수 값으로 선언하면 자동으로 주입됨
-		System.out.printf("아이디 : %s, 비밀번호 : %s\n", id, pwd);
+		log.debug("아이디 : {}, 비밀번호 : {}", id, pwd);
+		// System.out.printf("아이디 : %s, 비밀번호 : %s\n", id, pwd);
 		
 		String result = memberService.selectMemberByIdPwd(id, pwd);
 		
@@ -63,6 +68,7 @@ public class MemberController1 {
 		map.put("list", memberService.selectMemberList());
 		map.put("m", memberService.selectMemberByNo(2));
 		
+		log.debug("map : {} ", map);
 		return map;
 	}
 }
