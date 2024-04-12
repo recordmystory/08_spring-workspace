@@ -2,4 +2,15 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
 	<!-- settings + typeAliases + [environments] + mappers -->
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="com.br.sbatis.dto.NoticeDto" alias="NoticeDto"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappers/notice-mapper.xml"/>
+	</mappers>
 </configuration>

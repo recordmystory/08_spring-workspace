@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="noticeMapper">
-	<!-- 
-			com.br.sbatis.dto.NoticeDto
-			com.br.sbatis.dao.NoticeDao
-			com.br.sbatis.service.NoticeService<I>
-			com.br.sbatis.service.NoticeServiceImpl
-			com.br.sbatis.controller.NoticeController
-	 -->
+	
+	<resultMap id="noticeResultMap" type="NoticeDto">
+		<id column="no" property="no"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+	</resultMap>
+	
+	<!-- 전체 조회용 쿼리 (id="selectNoticeList") -->
+	<select id="selectNoticeList" resultMap="noticeResultMap">
+		SELECT 
+					NO
+				, TITLE
+				, CONTENT
+		FROM NOTICE
+		ORDER BY NO DESC
+	</select>
+	
+	<!-- 번호로 특정 공지사항 하나 조회용 쿼리 (id="selectNoticeByNo") -->
+	<select id="selectNoticeByNo" resultMap="noticeResultMap">
+		SELECT 
+					NO
+				, TITLE
+				, CONTENT
+		FROM NOTICE
+		WHERE NO = #{noticeNo}
+	</select>
+	
+	<!-- 공지사항 등록용 쿼리 (id="insertNotice") -->
+	<insert id="insertNotice">
+		INSERT 
+				INTO NOTICE
+				(
+						NO
+					, TITLE
+					, CONTENT
+				)
+				VALUES
+				(
+					SEQ_NNO.NEXTVAL
+					, #{title}
+					, #{content}
+				)	
+	</insert>
+	
+	<!-- 공지사항 수정용 쿼리 (id="updateNotice") -->
+	<update id="updateNotice">
+		UPDATE NOTICE
+		SET TITLE = #{title},
+				CONTENT = #{content}
+		WHERE NO = #{no}
+	</update>
 </mapper>

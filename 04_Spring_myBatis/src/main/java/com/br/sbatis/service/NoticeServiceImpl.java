@@ -17,22 +17,22 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	@Override
 	public List<NoticeDto> selectNoticeList() {
-		return null;
+		return noticeDao.selectNoticeList();
 	}
 
 	@Override
 	public NoticeDto selectNoticeByNo(int noticeNo) {
-		return null;
+		return noticeDao.selectNoticeByNo(noticeNo);
 	}
 
 	@Override
 	public int insertNotice(NoticeDto n) {
-		return 0;
+		return noticeDao.insertNotice(n);
 	}
 
 	@Override
 	public int updateNotice(NoticeDto n) {
-		return 0;
+		return noticeDao.updateNotice(n);
 	}
 
 }
