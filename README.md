@@ -562,3 +562,61 @@ INSERT INTO NOTICE VALUES(SEQ_NNO.NEXTVAL, '제목3', '내용3');
 COMMIT;
 
 ```
+---
+#### 2024-04-16(화)
+- 예외처리
+
+화면단에서부터 예외가 발생하지 않도록 예외처리하는 것 중요함
+
+- 마이바티스 동적 쿼리
+
+배열값을 넘겨받아 DELETE문 수행
+
+```sql
+<delete id="deleteNotice">
+		DELETE FROM NOTICE
+		<where>
+			<foreach collection="array" item="item" open="NO IN(" separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</delete>
+```
+
+최종적으로 완성되는 SQL문은 DELETE FROM NOTICE WHERE NO IN( '11' , '10' ) 
+
+collection 속성엔 파라미터값의 타입 작성
+
+foreach 태그 안엔 item 속성의 value값 작성
+
+### AOP (Aspect Oriented Programming)
+
+비즈니스로직 메소드(핵심로직)마다 매번 공통적으로 처리해야되는 내용(로깅, 트랜잭션 처리)을 하나의 코드로만 정의해두고 내가 원하는 시점에 반복 적용시키는 프로그래밍 기법
+
+AOP를 적용해두면 공통로직을 핵심로직에 적용시키고자 할 때 공통로직을 내가 원하는 시점에 편하게 적용할 수 있음
+
+- AOP 관련 용어
+    - JoinPoint
+        
+        AOP를 적용시킬 수 있는 메소드 전체 
+        
+    - PointCut
+        
+        AOP를 적용시키고자하는 메소드 ( ex : 그중에 로깅 또는 트랜잭션 처리가 필요한 메소드)
+        
+    - Advice
+        
+        AOP 동작 자체 (즉, 삽입하고자 하는 공통로직)
+        
+- AOP 동작 시점 5가지
+    - @Before : PointCut 동작 이전
+    - @After : PointCut 동작 이후
+    - @Around : PointCut 동작 이전 / 이후
+    - @AfterReturning : PointCut 정상 완료 이후
+    - @AfterThrowing : PointCut 예외 발생 이후
+    
+- **AspectJ Weaver**
+
+	AOP 관련 라이브러리
+	
+	https://mvnrepository.com/artifact/org.aspectj/aspectjweaver/1.9.22
