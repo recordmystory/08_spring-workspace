@@ -27,4 +27,8 @@ public class NoticeDao {
 	public int updateNotice(NoticeDto n) {
 		return sqlSessionTemplate.update("noticeMapper.updateNotice", n);
 	}
+
+	public int deleteNotice(String[] deleteNo) {
+		return sqlSessionTemplate.delete("noticeMapper.deleteNotice", deleteNo);
+	}
 }

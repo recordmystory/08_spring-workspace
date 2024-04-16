@@ -25,6 +25,11 @@
 
 			내용 : ${n.content}<br>
 		</c:otherwise>
+		
 	</c:choose>
+		<button onclick="location.href='${contextPath}/notice/modifyForm.do?no=${n.no}'">수정하기 페이지로 이동</button>
+			<!-- /sbatis/notice/modifyForm.do url 요청시 get방식으로 해당 글번호 넘기기 /WEB-INF/views/notice/modifyForm.jsp로 포워딩 -->
+			
+			
 </body>
 </html>

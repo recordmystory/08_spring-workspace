@@ -52,4 +52,14 @@
 				CONTENT = #{content}
 		WHERE NO = #{no}
 	</update>
+	
+	<!-- 곻지사항 삭제용 쿼리 -->
+	<delete id="deleteNotice">
+		DELETE FROM NOTICE
+		<where>
+			<foreach collection="array" item="item" open="NO IN(" separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</delete>
 </mapper>

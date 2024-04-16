@@ -2,6 +2,7 @@ package com.br.sbatis.service;
 
 import java.util.List;
 
+
 import com.br.sbatis.dto.NoticeDto;
 
 public interface NoticeService {
@@ -16,5 +17,7 @@ public interface NoticeService {
 
 	// 공지사항 수정용 서비스 (updateNotice)
 	int updateNotice(NoticeDto n);
-
+	
+	// 공지사항 일괄삭제용 서비스 (deleteNotice)
+	int deleteNotice(String[] deleteNo);
 }
