@@ -49,4 +49,19 @@ public class NoticeServiceImpl implements NoticeService {
 		return noticeDao.deleteNotice(deleteNo);
 	}
 
+	@Override
+	public int transactionTest() {
+		
+		int result1 = noticeDao.insertNotice(NoticeDto.builder()
+														.title("트랜잭션 테스트용 제목2")
+														.content("트랜잭션 테스트용 내용2")
+														.build()); // 성공용
+		
+		int result2 = noticeDao.insertNotice(new NoticeDto()); // 실패용
+		
+		// 둘중에 하나라도 실패하면 전체 실패되어야함
+		
+		return result1 * result2;
+	}
+
 }

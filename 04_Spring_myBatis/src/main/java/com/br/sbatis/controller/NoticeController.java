@@ -96,4 +96,9 @@ public class NoticeController {
 			return "redirect:/";
 		}
 	}
+	
+	@GetMapping("/txTest.do")
+	public void transactionTest() {
+		noticeService.transactionTest();
+	}
 }

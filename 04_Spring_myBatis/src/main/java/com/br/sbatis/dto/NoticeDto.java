@@ -1,7 +1,7 @@
 package com.br.sbatis.dto;
 
 import lombok.AllArgsConstructor;
-//import lombok.Builder;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-//@Builder
+@Builder
 public class NoticeDto {
 	private int no;
 	private String title;

@@ -20,4 +20,7 @@ public interface NoticeService {
 	
 	// 공지사항 일괄삭제용 서비스 (deleteNotice)
 	int deleteNotice(String[] deleteNo);
+	
+	// 트랜잭션 테스트용 서비스
+	int transactionTest();
 }
