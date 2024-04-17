@@ -620,3 +620,56 @@ AOP를 적용해두면 공통로직을 핵심로직에 적용시키고자 할 �
 	AOP 관련 라이브러리
 	
 	https://mvnrepository.com/artifact/org.aspectj/aspectjweaver/1.9.22
+---
+#### 2024-04-17(수)
+### 파일 업로드
+
+- pom.xml에 파일 업로드 관련 라이브러리 세팅
+
+https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload/1.5
+
+https://mvnrepository.com/artifact/commons-io/commons-io/2.11.0
+
+- 초기 세팅
+    1. 항상 HomeController, home.jsp 파일 삭제
+    2. root-context.xml 파일에 db 연결정보, 트랜잭션 정보(복사)
+    3. src/main/resources : config, mappers 폴더 만들기, config/mybatis-config.xml 파일 만들기(dtd 설정) + settings, typeAlias, mapper 등록, mappers/board-mapper.xml 파일 만들기(dtd 설정) + namespace 지정
+    
+    com.br.file.controller.MvcController : “/” 요청시 “main.jsp” 뜨드록 
+    
+    com.br.file.dto.BoardController : “/board” 요청시 다 처리되도록
+    
+    com.br.file.dto.BoardDto + 필드, set/getter, 생성자, toString
+    
+    com.br.file.dto.AttachDto + 필드, set/getter, 생성자, toString
+    
+    com.br.file.dao.BoardDao 
+    
+    com.br.file.service.BoardService<I>
+    
+    com.br.file.service.BoardServiceImpl
+    
+    MVC 각 클래스 빈 등록 및 서로 의존성 주입되도록
+    
+- DB 테이블 생성 (sbatis 계정)
+
+```sql
+CREATE TABLE BOARD
+(
+    BOARD_NO NUMBER PRIMARY KEY
+  , BOARD_TITLE VARCHAR2(100) NOT NULL
+  , BOARD_CONTENT VARCHAR2(2000)
+);
+
+CREATE TABLE ATTACHMENT
+(
+    FILE_NO NUMBER PRIMARY KEY
+  , FILE_PATH VARCHAR2(300)
+  , ORIGINAL_NAME VARCHAR2(300)
+  , FILESYSTEM_NAME VARCHAR2(300)
+  , REF_BOARD_NO NUMBER REFERENCES BOARD
+);
+
+CREATE SEQUENCE SEQ_BNO NOCACHE;
+CREATE SEQUENCE SEQ_ANO NOCACHE;
+```
