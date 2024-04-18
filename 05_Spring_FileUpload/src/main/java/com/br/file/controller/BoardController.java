@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.br.file.dto.AttachDto;
@@ -91,5 +92,29 @@ public class BoardController {
 			log.info("게시판 작성 실패");
 		}
 		return "redirect:/";
+	}
+	
+	@ResponseBody // 돌려주는 데이터 (success, fail)가 포워딩이 아닌 문자열로 돌려주는 어노테이션
+	@PostMapping("/ajaxInsert.do")
+	public String insertAjaxFileBoard(BoardDto board, MultipartFile uploadFile) {
+		AttachDto attach = null;
+		
+		if(uploadFile != null && !uploadFile.isEmpty()) {
+			Map<String, String> map = fileUtil.fileUpload(uploadFile);
+			
+			attach = AttachDto.builder()
+							  .filePath(map.get("filePath"))
+							  .originalName(map.get("originalName"))
+							  .fileSystemName(map.get("fileSystemName"))
+							  .build();
+		}
+		
+		int result = boardService.insertOneFileBoard(board, attach);
+		
+		if (result > 0) {
+			return "success";
+		} else {
+			return "fail";
+		}
 	}
 }

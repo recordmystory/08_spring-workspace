@@ -71,14 +71,41 @@
 	
 	<h2>3. 비동기식 첨부파일 업로드 테스트</h2>
 	<div id="async_test">
-		게시글 제목 : <input type="text"><br>
-		게시글 내용 : <textarea></textarea><br>
-		첨부파일 : <input type="file" class="file"><br><br>
+		게시글 제목 : <input type="text" id="title"><br>
+		게시글 내용 : <textarea id="content"></textarea><br>
+		첨부파일 : <input type="file" class="file" id="file"><br><br>
 		<label class="guide">첨부파일 사이즈는 10MB 이하여야 합니다.</label><br><br>
 		
-		<input type="submit" value="등록">
+		<input type="submit" value="등록" id="submit">
 	</div>
 	
+	<script>
+		$(document).ready(function(){
+			$('#submit').click(function(){
+				
+				// JavaScript의 객체 : 가상의 form 요소
+				// 첨부파일 저장 시 formData 객체에 저장
+				let formData = new FormData();
+				formData.append("boardTitle", document.getElementById('title').value);
+				formData.append("boardContent", document.querySelector('#content').value);
+				formData.append("uploadFile", document.getElementById('file').files[0]); // 선택된 요소에 files에 접근 : fileList 객체
+				
+				$.ajax({
+					url: '${contextPath}/board/ajaxInsert.do',
+					type: 'post',
+					data: formData,
+					processData: false, // processData를 false로 설정하지 않으면 formData가 String으로 변환되지 않음
+					contentType: false, // contentType: false 해야 multipart/form-data로 전송됨
+					success: function(result){
+						alert(result == 'success' ? '게시글 등록 성공' : '게시글 등록 실패');
+					},
+					error: function(){
+						console.log('비동기식 파일 업로드 실패');
+					}
+				});
+			});
+		});
+	</script>
 	<h2>4. 첨부파일 목록 조회</h2>
 </body>
 </html>
