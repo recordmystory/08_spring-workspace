@@ -60,10 +60,10 @@
 	</form>
 	
 	<h2>2. 다중 첨부파일 업로드 테스트</h2>
-	<form action="" method="post">
-		게시글 제목 : <input type="text"><br>
-		게시글 내용 : <textarea></textarea><br>
-		첨부파일 : <input type="file" multiple class="file"><br><br>
+	<form action="${contextPath}/board/insert2.do" method="post" enctype="multipart/form-data">
+		게시글 제목 : <input type="text" name="boardTitle"><br>
+		게시글 내용 : <textarea name="boardContent"></textarea><br>
+		첨부파일 : <input type="file" multiple class="file" name="uploadFiles"><br><br>
 		<label class="guide">각 첨부파일 사이즈는 10MB 이하, 총 100MB 이하여야 합니다.</label><br><br>
 		
 		<input type="submit" value="등록">

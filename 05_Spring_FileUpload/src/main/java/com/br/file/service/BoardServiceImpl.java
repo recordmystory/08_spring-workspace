@@ -30,7 +30,18 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int insertManyFileBoard(BoardDto board, List<AttachDto> list) {
-		return 0;
+		int result1 = boardDao.insertBoard(board);
+		
+		int result2 = 1;
+		
+		if(!list.isEmpty()) { // 첨부파일이 있었을 경우
+			result2 = 0;
+			for(AttachDto attach : list) { 
+				result2 += boardDao.insertAttach(attach);
+			}
+		}
+		
+		return result1 * result2;
 	}
 
 }

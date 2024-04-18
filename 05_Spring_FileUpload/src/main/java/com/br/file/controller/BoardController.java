@@ -1,11 +1,8 @@
 package com.br.file.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +27,9 @@ public class BoardController {
 
 	@PostMapping("/insert1.do")
 	public String insertOneFileBoard(BoardDto board, MultipartFile uploadFile) {
-		
+
 		// * 1~3번까지 FileUtil 클래스의 fileUpload 메소드 호출
-		
+
 		// 라이브러리 추가 + multipartResolver 빈으로 등록해야 값이 잘 주입됨
 
 		// log.debug("board : {}", b);
@@ -43,26 +40,56 @@ public class BoardController {
 			// 전달된 첨부파일 업로드 처리 (외부경로)
 
 			Map<String, String> map = fileUtil.fileUpload(uploadFile);
-			
+
 			// 4) DB에 기록을 위해 AttachDto 객체 생성해서 insert할 데이터 담기
 			attach = AttachDto.builder()
 								.filePath(map.get("filePath"))
 								.originalName(map.get("originalName"))
 								.fileSystemName(map.get("fileSystemName"))
 								.build();
-			
+
 		}
-		
+
 		log.debug("board : {} ", board);
 		log.debug("attach: {}", attach);
 		int result = boardService.insertOneFileBoard(board, attach);
-		
-		if(result > 0) {
+
+		if (result > 0) {
 			log.debug("게시글 작성 성공");
 		} else {
 			log.debug("게시글 작성 실패");
 		}
+
+		return "redirect:/";
+	}
+
+	@PostMapping("/insert2.do")
+	public String insertManyFileBoard(BoardDto board, List<MultipartFile> uploadFiles) {
+		log.debug("board : {}", board);
+		log.debug("uploadFiles : {}", uploadFiles); // MultipartFile 객체가 여러 개 담겨있는 배열의 형태
+
+		List<AttachDto> list = new ArrayList<>();
+
+		for (MultipartFile uploadFile : uploadFiles) {
+			if (uploadFile != null && !uploadFile.isEmpty()) {
+				// 파일 업로드
+				Map<String, String> map = fileUtil.fileUpload(uploadFile);
+				// DB에 insert할 데이터 처리
+				list.add(AttachDto.builder()
+								  .filePath(map.get("filePath"))
+								  .originalName(map.get("originalName"))
+								  .fileSystemName(map.get("fileSystemName"))
+								  .build() );
+			}
+		}
 		
+		int result = boardService.insertManyFileBoard(board, list);
+		
+		if(list.isEmpty() && result == 1 || !list.isEmpty() && result == list.size()) {
+			log.info("게시판 작성 성공");
+		} else {
+			log.info("게시판 작성 실패");
+		}
 		return "redirect:/";
 	}
 }
