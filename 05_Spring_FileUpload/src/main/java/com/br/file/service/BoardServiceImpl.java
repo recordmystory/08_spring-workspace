@@ -13,12 +13,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class BoardServiceImpl implements BoardService {
-	
+
 	private final BoardDao boardDao;
-	
+
 	@Override
 	public int insertOneFileBoard(BoardDto board, AttachDto attach) {
-		return 0;
+		int result1 = boardDao.insertBoard(board);
+		int result2 = 1;
+
+		if (attach != null) { // 첨부파일이 있을 경우
+			result2 = boardDao.insertAttach(attach);
+		}
+
+			return result1 * result2;
 	}
 
 	@Override
