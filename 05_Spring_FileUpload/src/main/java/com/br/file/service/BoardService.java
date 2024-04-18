@@ -13,4 +13,6 @@ public interface BoardService {
 	// 다중 첨부파일 게시글 추가용 서비스
 	int insertManyFileBoard(BoardDto board, List<AttachDto> list);
 	
+	// 첨부파일 조회용 
+	List<AttachDto> selectAtList();
 }

@@ -44,4 +44,9 @@ public class BoardServiceImpl implements BoardService {
 		return result1 * result2;
 	}
 
+	@Override
+	public List<AttachDto> selectAtList() {
+		return boardDao.selectAtList();
+	}
+
 }

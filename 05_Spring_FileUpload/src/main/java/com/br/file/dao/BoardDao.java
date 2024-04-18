@@ -1,5 +1,7 @@
 package com.br.file.dao;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +21,10 @@ public class BoardDao {
 
 	public int insertAttach(AttachDto attach) {
 		return sqlSessionTemplate.insert("boardMapper.insertAttach", attach);
+	}
+	
+	public List<AttachDto> selectAtList(){
+		return sqlSessionTemplate.selectList("boardMapper.selectAtList");
 	}
 	
 }

@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="boardMapper">
-
+	
+	<resultMap id="attachResultMap" type="AttachDto">
+		<id column="file_no" property="fileNo"/> <!-- PK인 컬럼에 대해서는 id로 작성 -->
+		<result column="file_path" property="filePath"/>
+		<result column="original_name" property="originalName"/>
+		<result column="filesystem_name" property="fileSystemName"/>
+		<result column="ref_board_no" property="refBoardNo"/>
+	</resultMap>
+	
 	<insert id="insertBoard">
 		INSERT
 			INTO BOARD
@@ -37,4 +45,14 @@
 				, SEQ_BNO.CURRVAL
 			)
 	</insert>
+	
+	<select id="selectAtList" resultMap="attachResultMap">
+		SELECT 
+				FILE_NO 
+			, FILE_PATH
+			, ORIGINAL_NAME
+			, FILESYSTEM_NAME
+			, REF_BOARD_NO
+		FROM ATTACHMENT
+	</select>
 </mapper>
