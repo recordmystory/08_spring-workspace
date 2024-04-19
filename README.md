@@ -670,6 +670,24 @@ CREATE TABLE ATTACHMENT
   , REF_BOARD_NO NUMBER REFERENCES BOARD
 );
 
+
 CREATE SEQUENCE SEQ_BNO NOCACHE;
 CREATE SEQUENCE SEQ_ANO NOCACHE;
 ```
+---
+#### 2024-04-11(목)
+### 첨부파일 업로드
+
+- jquery
+    
+    이벤트 function에 파라미터 작성할 때
+    
+    [파라미터.target](http://파라미터.target) :  현재 이벤트가 발생된 요소를 가리킴
+    
+    파라미터.target.files : 첨부된 파일을 가리킴
+    
+
+- 첨부파일 업로드 시 빈 등록해야함
+
+- UUID.randomUUID() : 32자리의 랜덤값 + 하이픈(-) 4개 생성
+  
