@@ -16,6 +16,23 @@
 	</properties>
 	<dependencies>
 
+		<!-- *JUnit 관련 라이브러리 -->
+		<!-- > 기존에 작성되어있던 JUnit4 라이브러리 -->
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework-version}</version>
+			<scope>test</scope>
+		</dependency>
+		
 		<!-- * 파일업로드 관련 라이브러리 -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -163,13 +180,6 @@
 			<version>1.2</version>
 		</dependency>
 
-		<!-- Test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

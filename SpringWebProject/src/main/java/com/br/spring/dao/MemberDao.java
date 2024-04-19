@@ -13,26 +13,26 @@ public class MemberDao {
 	private final SqlSessionTemplate sqlSessionTemplate;
 
 	public MemberDto selectMember(MemberDto m) {
-		return sqlSessionTemplate.selectOne("MemberMapper.selectMember", m);
+		return sqlSessionTemplate.selectOne("memberMapper.selectMember", m);
 	}
 
 	public int selectUserIdCount(String checkId) {
-		return sqlSessionTemplate.selectOne("MemberMapper.selectUserIdCount", checkId);
+		return sqlSessionTemplate.selectOne("memberMapper.selectUserIdCount", checkId);
 	}
 
 	public int insertMember(MemberDto m) {
-		return sqlSessionTemplate.insert("MemberMapper.insertMember", m);
+		return sqlSessionTemplate.insert("memberMapper.insertMember", m);
 	}
 
 	public int updateProfileImg(MemberDto m) {
-		return sqlSessionTemplate.update("MemberMapper.updateProfileImg", m);
+		return sqlSessionTemplate.update("memberMapper.updateProfileImg", m);
 	}
 
 	public int updateMember(MemberDto m) {
-		return sqlSessionTemplate.update("MemberMapper.updateMember", m);
+		return sqlSessionTemplate.update("memberMapper.updateMember", m);
 	}
 
 	public int deleteMember(String userId) {
-		return sqlSessionTemplate.update("MemberMapper.deleteMember", userId);
+		return sqlSessionTemplate.update("memberMapper.deleteMember", userId);
 	}
 }

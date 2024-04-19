@@ -38,7 +38,7 @@
 	</select>
 	
 	<!-- 아이디 중복체크용 쿼리 -->
-	<select id="selectUserIdCount" resultMap="_int">
+	<select id="selectUserIdCount" resultType="_int">
 		SELECT COUNT(*)
 		FROM MEMBER
 		WHERE USER_ID = #{checkId}
