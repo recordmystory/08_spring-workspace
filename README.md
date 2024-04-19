@@ -690,4 +690,284 @@ CREATE SEQUENCE SEQ_ANO NOCACHE;
 - 첨부파일 업로드 시 빈 등록해야함
 
 - UUID.randomUUID() : 32자리의 랜덤값 + 하이픈(-) 4개 생성
-  
+---
+#### 2024-04-12(금)
+- DB 계정 생성 및 테이블 생성
+
+```sql
+CREATE USER SPRING IDENTIFIED BY SPRING;
+GRANT RESOURCE, CONNECT TO SPRING;
+```
+
+```sql
+
+-----------------삭제------------------
+--접속유저의 모든테이블 및 제약조건 삭제
+BEGIN
+    FOR C IN (SELECT TABLE_NAME FROM USER_TABLES) LOOP
+    EXECUTE IMMEDIATE ('DROP TABLE '||C.TABLE_NAME||' CASCADE CONSTRAINTS');
+    END LOOP;
+END;
+/
+--접속유저의 모든 시퀀스 삭제
+BEGIN
+FOR C IN (SELECT * FROM USER_SEQUENCES) LOOP
+  EXECUTE IMMEDIATE 'DROP SEQUENCE '||C.SEQUENCE_NAME;
+END LOOP;
+END;
+/
+--접속유저의 모든 뷰 삭제
+BEGIN
+FOR C IN (SELECT * FROM USER_VIEWS) LOOP
+  EXECUTE IMMEDIATE 'DROP VIEW '||C.VIEW_NAME;
+END LOOP;
+END;
+/
+---------------------------------------
+
+--------------------------------------------------
+--------------     MEMBER 관련	------------------	
+--------------------------------------------------
+CREATE TABLE MEMBER (
+  USER_NO NUMBER PRIMARY KEY,
+  USER_ID VARCHAR2(30) NOT NULL UNIQUE,
+  USER_PWD VARCHAR2(100) NOT NULL,
+  USER_NAME VARCHAR2(15) NOT NULL,
+  EMAIL VARCHAR2(100),
+  GENDER VARCHAR2(1) CHECK (GENDER IN('M', 'F')),
+  PHONE VARCHAR2(13),
+  ADDRESS VARCHAR2(100),
+  PROFILE_URL VARCHAR2(400),
+  SIGNUP_DATE DATE DEFAULT SYSDATE,
+  MODIFY_DATE DATE DEFAULT SYSDATE,
+  STATUS VARCHAR2(1) DEFAULT 'Y' CHECK(STATUS IN('Y', 'N', 'A'))
+);
+
+CREATE SEQUENCE SEQ_UNO NOCACHE;
+
+COMMENT ON COLUMN MEMBER.USER_ID IS '회원아이디';
+COMMENT ON COLUMN MEMBER.USER_PWD IS '회원비밀번호';
+COMMENT ON COLUMN MEMBER.USER_NAME IS '회원이름';
+COMMENT ON COLUMN MEMBER.EMAIL IS '회원이메일';
+COMMENT ON COLUMN MEMBER.GENDER IS '회원성별';
+COMMENT ON COLUMN MEMBER.PHONE IS '회원전화번호';
+COMMENT ON COLUMN MEMBER.ADDRESS IS '회원주소';
+COMMENT ON COLUMN MEMBER.PROFILE_URL IS '프로필이미지경로';
+COMMENT ON COLUMN MEMBER.SIGNUP_DATE IS '회원가입날짜';
+COMMENT ON COLUMN MEMBER.MODIFY_DATE IS '회원수정날짜';
+COMMENT ON COLUMN MEMBER.STATUS IS '회원상태값';
+
+INSERT INTO MEMBER 
+VALUES (SEQ_UNO.NEXTVAL, 'admin01', '1234', '관리자', 'admin@br.or.kr', 'F', '010-1111-2222', '서울시 강남구 역삼동', NULL, '20220101', '20220101', 'A');
+
+INSERT INTO MEMBER 
+VALUES (SEQ_UNO.NEXTVAL, 'user01', 'pass01', '홍길동', 'user01@br.or.kr', 'M', '010-3333-4444', '서울시 양천구 목동', NULL, '20220201', '20220201', DEFAULT);
+
+INSERT INTO MEMBER 
+VALUES (SEQ_UNO.NEXTVAL, 'user02', 'pass02', '김말똥', 'user02@br.or.kr', 'F', '010-5555-6666', '서울시 강서구 마곡', NULL, '20220301', '20220301', DEFAULT);
+
+----------------------------------------------------
+----------------     NOTICE 관련        -----------------	
+----------------------------------------------------
+
+CREATE TABLE NOTICE (
+  NOTICE_NO NUMBER PRIMARY KEY,
+  NOTICE_TITLE VARCHAR2(30) NOT NULL,
+  NOTICE_WRITER NUMBER NOT NULL,
+  NOTICE_CONTENT VARCHAR2(200) NOT NULL,
+  REGIST_DATE DATE DEFAULT SYSDATE,
+  FOREIGN KEY (NOTICE_WRITER) REFERENCES MEMBER ON DELETE CASCADE
+);
+
+COMMENT ON COLUMN NOTICE.NOTICE_NO IS '공지사항번호';
+COMMENT ON COLUMN NOTICE.NOTICE_TITLE IS '공지사항제목';
+COMMENT ON COLUMN NOTICE.NOTICE_WRITER IS '공지사항작성자';
+COMMENT ON COLUMN NOTICE.NOTICE_CONTENT IS '공지사항내용';
+COMMENT ON COLUMN NOTICE.REGIST_DATE IS '공지사항작성날짜';
+
+CREATE SEQUENCE SEQ_NNO NOCACHE;
+
+INSERT INTO NOTICE VALUES (SEQ_NNO.NEXTVAL, '관리자 공지', 1,
+                          '공지서비스를 게시합니다.  많이 이용해 주세요', 
+                          '20220401');
+                          
+INSERT INTO NOTICE VALUES (SEQ_NNO.NEXTVAL, '공지서비스 오픈 환영', 1,
+                          '드디어 오픈되었군요. 많이 이용하겠습니다.', 
+                          '20220403');
+                          
+INSERT INTO NOTICE VALUES (SEQ_NNO.NEXTVAL, '공지서비스 이용 안내', 1,
+                          '공지서비스는 회원만 이용할 수 있습니다. 회원 가입하세요.', 
+                          '20220415');
+
+COMMIT;
+
+----------------------------------------------------
+----------------     BOARD 관련        -----------------	
+----------------------------------------------------
+
+CREATE TABLE BOARD(
+  BOARD_NO NUMBER PRIMARY KEY,
+  BOARD_TITLE VARCHAR2(100) NOT NULL,
+  BOARD_WRITER NUMBER NOT NULL,
+  BOARD_CONTENT VARCHAR2(4000) NOT NULL,
+  COUNT NUMBER DEFAULT 0,
+  REGIST_DATE DATE DEFAULT SYSDATE,
+  STATUS VARCHAR2(1) DEFAULT 'Y' CHECK (STATUS IN('Y', 'N')),
+  FOREIGN KEY (BOARD_WRITER) REFERENCES MEMBER ON DELETE CASCADE
+);
+
+COMMENT ON COLUMN BOARD.BOARD_NO IS '게시글번호';
+COMMENT ON COLUMN BOARD.BOARD_TITLE IS '게시글제목';
+COMMENT ON COLUMN BOARD.BOARD_WRITER IS '게시글작성자';
+COMMENT ON COLUMN BOARD.BOARD_CONTENT IS '게시글내용';
+COMMENT ON COLUMN BOARD.COUNT IS '게시글조회수';
+COMMENT ON COLUMN BOARD.REGIST_DATE IS '게시글올린날짜';
+COMMENT ON COLUMN BOARD.STATUS IS '게시글상태값';
+
+CREATE SEQUENCE SEQ_BNO NOCACHE;
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, '관리자 게시글', 1, 
+       '저희 사이트를 이용해 주셔서 감사합니다.',  
+       DEFAULT, '20220503', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'MVC Model2 패턴이란', 2, 
+       '웹 애플리케이션 설계 방식 중 하나입니다.', 
+       DEFAULT, '20220507', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, '설계방식 2', 2, 
+       '웹 애플리케이션 설계 방식 중 두번째 방식은 각 서블릿 구동 앞에 First Controller 를 두는 것입니다..', 
+       DEFAULT, '20220603', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, '설계방식3', 2, 
+       '웹 애플리케이션 설계 방식 중 세번째 방식은 Front Controller 다음에 연결되는 컨트롤러들을 서블릿이 아닌 자바 클래스로 작성해서 연결하는 방식입니다.', 
+       DEFAULT, '20220615', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'MVC Model1 패턴', 3, 
+       '웹 애플리케이션 설계 방식 중 JSP 파일이 뷰와 컨트롤러 두가지 다를 처리하는 방식입니다.', 
+        DEFAULT, '20220618', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'JSP란', 3, 'Java Server Page 를 말함', 
+       DEFAULT, '20220621', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'Servlet 이란', 1, '서버에서 구동되는 웹 규약이 적용된 Java EE 모듈이 제공하는 서비스 처리용 클래스임.', 
+       DEFAULT, '20220701', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'JSP Elements 들', 1, 
+       'Derective(지시자) 태그, Decleation(선언) 태그, Scriptlet 태그, Expression 태그, Comment 태그가 있다.', 
+       DEFAULT, '20220714', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'HTML5', 3, 
+       '새로운 웹 표준기술로 모든 디바이스 장치와 브라우저에서 동일하게 작동되는 웹 페이지를 만들기 위한 기술을 제공한다.', 
+        DEFAULT, '20220723', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'CSS3', 2, '웹 페이지를 꾸미기 위한 스타일시트로 HTML5 버전에 맞추어 속성들이 업그레이드 되었다.', 
+       DEFAULT, '20220730', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'JavaScript 란', 3, '웹 표준 2.0 에서 새로 추가된 강력한 API 들을 제공한다.', 
+       DEFAULT, '20220803', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'jQuery 란', 1, 
+       '자바스크립트 오픈 소스 라이브러리의 하나로 html 요소들을 css 선택자를 이용하여 쉽게 선택할 수 있는 기능들을 제공한다..', 
+       DEFAULT, '20220807', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, 'ajax 란', 1, 'asynchronos javascript and xml 의 줄임말로 서버의 서블릿과 직접 통신하는 자바스크립트 기술이다.', 
+       DEFAULT, '20220808', DEFAULT);
+       
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, '필터(Filter) 란', 3, '클라이언트 요청한 서비스가 서블릿으로 전달되기 전에 먼저 구동되는 클래스이다.', 
+       DEFAULT, '20220809', DEFAULT);
+
+INSERT INTO BOARD 
+VALUES(SEQ_BNO.NEXTVAL, '래파(Wrapper) 란', 2, '필터가 나꿔챈 요청에 대한 데이터 처리를 담당하는 클래스이다.', 
+       DEFAULT, '20220810', DEFAULT);
+
+----------------------------------------------------
+---------------     ATTACHMENT 관련         -------------------	
+----------------------------------------------------
+
+CREATE TABLE ATTACHMENT(
+  FILE_NO NUMBER PRIMARY KEY,
+  FILE_PATH VARCHAR2(100),
+  FILESYSTEM_NAME VARCHAR2(200),
+  ORIGINAL_NAME VARCHAR2(200),
+  UPLOAD_DATE DATE DEFAULT SYSDATE,
+  REF_TYPE CHAR(1) CHECK(REF_TYPE IN ('N', 'B')),
+  REF_NO NUMBER 
+);
+
+CREATE SEQUENCE SEQ_ANO NOCACHE;
+
+----------------------------------------------------
+---------------     REPLY 관련         -------------------	
+----------------------------------------------------
+
+CREATE TABLE REPLY(
+  REPLY_NO NUMBER PRIMARY KEY,
+  REPLY_CONTENT VARCHAR2(400) NOT NULL,
+  REF_BNO NUMBER NOT NULL,
+  REPLY_WRITER NUMBER NOT NULL,
+  REGIST_DATE DATE DEFAULT SYSDATE,
+  STATUS VARCHAR2(1) DEFAULT 'Y' CHECK (STATUS IN ('Y', 'N')),
+  FOREIGN KEY (REF_BNO) REFERENCES BOARD ON DELETE CASCADE, 
+  FOREIGN KEY (REPLY_WRITER) REFERENCES MEMBER ON DELETE CASCADE 
+);
+
+COMMENT ON COLUMN REPLY.REPLY_NO IS '댓글번호';
+COMMENT ON COLUMN REPLY.REPLY_CONTENT IS '댓글내용';
+COMMENT ON COLUMN REPLY.REF_BNO IS '참조게시글번호';
+COMMENT ON COLUMN REPLY.REPLY_WRITER IS '댓글작성자아이디';
+COMMENT ON COLUMN REPLY.REGIST_DATE IS '댓글작성날짜';
+COMMENT ON COLUMN REPLY.STATUS IS '댓글상태값';
+
+CREATE SEQUENCE SEQ_RNO NOCACHE;
+
+INSERT INTO REPLY
+VALUES(SEQ_RNO.NEXTVAL, '첫번째 댓글입니다.', 1, 1, '20220813', DEFAULT);
+
+INSERT INTO REPLY
+VALUES(SEQ_RNO.NEXTVAL, '첫번째 댓글입니다.', 13, 2, '20220813', DEFAULT);
+
+INSERT INTO REPLY
+VALUES(SEQ_RNO.NEXTVAL, '두번째 댓글입니다.', 13, 3, '20220814', DEFAULT);
+
+INSERT INTO REPLY
+VALUES(SEQ_RNO.NEXTVAL, '마지막 댓글입니다.', 13, 1, '20220816', DEFAULT);
+
+COMMIT;
+
+```
+
+- spring 관련 클래스는 S가 붙어있음 (빈으로 등록되어있음)
+
+### jUnit4
+
+- 관련 어노테이션
+    
+    @RunWith(SpringJUnit4ClassRunner.class) : JUnit4를 이용해서 테스트
+    
+    @ContextConfiguration : 사용할 객체가 빈으로 등록되어있는 문서의 경로 작성
+    
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING) : 메소드의 이름 순으로 테스트를 수행
+    
+
+- 테스트 작성 패턴
+    - given (준비) : 어떠한 데이터를 가지고 할건지
+    - when (실행) : 어떤 메소드 실행시
+    - then (검증) : 어떤 결과가 나와야되는지
+        
+        assertEquals(예상값, 실행값) : 실행값과 예상값이 일치하는지 확인해주는 메소드
+        assertNotNull(실행값) : 실행값이 null이 아닌지를 확인해주는 메소드
+        assertTrue(조건) : 해당 조건이 참인지 확인해주는 메소드
