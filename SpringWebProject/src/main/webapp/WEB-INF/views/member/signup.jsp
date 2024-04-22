@@ -25,7 +25,7 @@
             <h2>회원가입</h2>
             <br>
 
-            <form action="" method="post" id="signup_form">
+            <form action="${contextPath}/member/signup.do" method="post" id="signup_form">
                 <div class="form-group">
                     <label for="userId">* ID :</label>
                     <input type="text" class="form-control" id="userId" name="userId" placeholder="Please Enter ID" required>
@@ -85,24 +85,32 @@
     <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
     
     <script>
+    	let idResult = false;
+    	let pwdResult = false;
+    	let pwdEqualResult = false;
+    	let nameResult = false;
+    	
     	$(document).ready(function(){
     		$('#signup_form input[name=userId]').on('keyup', function(){
     			let regExp = /^[a-z\d]{5,12}$/; // 아이디 형식 : 영문자, 숫자 5-12자
     			
     			if($(this).val().trim().length == 0){ // case 1 : 쓰여져있는 게 없을 경우
-    				$('#idCheck_result').removeClass('usable unusable').addClass('noCheck').text('');
+    				idResult = checkPrint('#idCheck_result', 'usable unusable', 'noCheck', '');
+    				// $('#idCheck_result').removeClass('usable unusable').addClass('noCheck').text('');
     			} else { // 쓰여져있는 게 없을 경우 -> 정규식 검사 진행
     				if(regExp.test($(this).val())){ // case 2 : 정규식 패턴에 만족할 경우 -> 아이디 중복체크 (ajax로 처리)
     					// 아이디 중복체크 (ajax로 처리)
     					$.ajax({
     						url: '${contextPath}/member/idcheck.do',
     						type: 'get',
+    						async: false, // 동기식으로 처리되도록 하는 속성 (순차적으로 진행)
     						data: 'checkId=' + $(this).val(),
     						success: function(result){
     							if(result == 'YYYYY'){
-    								$('#idCheck_result').removeClass('noCheck unusable').addClass('usable').text('사용 가능한 아이디입니다.');
+    								idResult = checkPrint('#idCheck_result', 'noCheck unusable', 'usable', '사용 가능한 아이디입니다.');
     							} else if(result == 'NNNNN'){
-    								$('#idCheck_result').removeClass('noCheck usable').addClass('unusable').text('중복된 아이디가 존재합니다. 다시 입력해주세요.');
+    								idResult = checkPrint('#idCheck_result', 'noCheck usable', 'unusable', '중복된 아이디가 존재합니다. 다시 입력해주세요.');
+    								// $('#idCheck_result').removeClass('noCheck usable').addClass('unusable').text('중복된 아이디가 존재합니다. 다시 입력해주세요.');
     							}
     						},
     						error: function(){
@@ -110,11 +118,75 @@
     						}
     					});
     				} else { // case 3 : 정규식 패턴에 만족하지 않을 경우
-    					$('#idCheck_result').removeClass('noCheck usable').addClass('unusable').text('영문, 숫자 포함 5~12자리로 작성해주세요.');
+    					idResult = checkPrint('#idCheck_result', 'noCheck usable', 'unusable', '영문, 숫자 포함 5~12자리로 작성해주세요.');
     				}
     			} 
+    		validate();
     		}); // id check end
+    		
+    		
+    		$('#signup_form input[name=userPwd]').on('keyup', function(){ // pwd check 
+    			let regExp = /^[a-z\d!@#$%^&*]{8,15}$/;
+    			
+    			if($(this).val().trim().length == 0){
+    					pwdResult = checkPrint('#pwdCheck_result', 'usable unusable', 'noCheck', '');
+    			} else {
+    				if(regExp.test($(this).val())){
+    					pwdResult = checkPrint('#pwdCheck_result', 'noCheck unusable', 'usable', '사용가능한 비밀번호입니다.');
+    				} else {
+    					pwdResult = checkPrint('#pwdCheck_result', 'noCheck usable', 'unusable', '영문자, 숫자 특수문자 8-15자로 작성해주세요.');
+    				}
+    			}
+    		validate();
+    		}); // pwd check end
+    		
+    		
+    		$('#signup_form input[id=checkPwd]').on('keyup', function(){
+    			if($(this).val().trim().length == 0){
+    				pwdEqualResult = checkPrint('#pwdEqualCheck_result', 'usable unusable', 'noCheck', '');
+    			} else {
+    				if($(this).val() == $('#signup_form input[name=userPwd]').val()){
+    					pwdEqualResult = checkPrint('#pwdEqualCheck_result', 'noCheck unusable', 'usable', '비밀번호가 일치합니다.');
+    				} else {
+    					pwdEqualResult = checkPrint('#pwdEqualCheck_result', 'noCheck usable', 'unusable', '비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+    				}
+    			}
+    		validate();
+    		}); // pwd equal check end
+    		
+    		
+    		$('#signup_form input[id=userName]').on('keyup', function(){ // name check 
+    			let regExp = /^[가-힣]{2,5}$/;
+    			
+    			if($(this).val().trim().length == 0){
+    				nameResult = checkPrint('#nameCheck_result', 'usable unusable', 'noCheck', '');
+    			} else {
+    				if(regExp.test($(this).val())){
+    					nameResult = checkPrint('#nameCheck_result', 'noCheck unusable', 'usable', '사용가능한 이름입니다.');
+    				} else {
+    					nameResult = checkPrint('#nameCheck_result', 'noCheck usable', 'unusable', '한글로 2~5자로 작성해주세요.');
+    				}
+    			}
+    		validate();
+    		}); // name check 
+    		
+    		
     	}); // document ready function end
+    	
+    	function checkPrint(selector, rmClassNm, addClassNm, msg){
+				$(selector).removeClass(rmClassNm).addClass(addClassNm).text(msg);
+				
+				return addClassNm == 'usable' ? true : false;
+    	};
+    	
+    	function validate(){
+    		console.log(idResult, pwdResult, pwdEqualResult, nameResult);
+    		if(idResult && pwdResult && pwdEqualResult && nameResult){
+    			$('#signup_form :submit').removeAttr('disabled');
+    		} else {
+    			$('#signup_form :submit').attr('disabled', true);    			
+    		}
+    	};
     </script>
 </body>
 </html>

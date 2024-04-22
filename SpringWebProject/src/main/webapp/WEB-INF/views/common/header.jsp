@@ -16,6 +16,11 @@
 
 <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
 
+<script src="${contextPath}/resources/alertify/js/alertify.min.js"></script>
+<link href="${contextPath}/resources/alertify/css/alertify.min.css" rel="stylesheet">
+<link href="${contextPath}/resources/alertify/css/default.min.css" rel="stylesheet">
+<link href="${contextPath}/resources/alertify/css/semantic.min.css" rel="stylesheet">
+
 </head>
 <body>
    <div id="header">
@@ -80,5 +85,15 @@
 </div>
 
 <br clear="both">
+
+<script>
+	if('${alertMsg}' != ''){ // alert 메시지가 있을 경우
+		alertify.alert('${alertTitle}', '${alertMsg}');
+	}
+	
+	if('${historyBackYN}' == 'Y'){
+		history.back();
+	}
+</script>
 </body>
 </html>
