@@ -675,7 +675,7 @@ CREATE SEQUENCE SEQ_BNO NOCACHE;
 CREATE SEQUENCE SEQ_ANO NOCACHE;
 ```
 ---
-#### 2024-04-11(목)
+#### 2024-04-18(목)
 ### 첨부파일 업로드
 
 - jquery
@@ -691,7 +691,7 @@ CREATE SEQUENCE SEQ_ANO NOCACHE;
 
 - UUID.randomUUID() : 32자리의 랜덤값 + 하이픈(-) 4개 생성
 ---
-#### 2024-04-12(금)
+#### 2024-04-19(금)
 - DB 계정 생성 및 테이블 생성
 
 ```sql
@@ -971,3 +971,74 @@ COMMIT;
         assertEquals(예상값, 실행값) : 실행값과 예상값이 일치하는지 확인해주는 메소드
         assertNotNull(실행값) : 실행값이 null이 아닌지를 확인해주는 메소드
         assertTrue(조건) : 해당 조건이 참인지 확인해주는 메소드
+---
+#### 2024-04-22(월)
+- header, footer 만들기
+- 로그인
+- 로그아웃
+- 회원가입
+    - 아이디 중복체크 (정규표현식 사용)
+    - 회원가입시 비밀번호 암호화 : 평문 → 암호문
+        
+        암호문을 DB에 기록
+        
+        암호화 : 평문을 암호문으로 바꾸는 것
+        
+        복호화 : 암호문을 평문으로 바꾸는 것
+        
+        양뱡향 암호화 : 암호화도 가능하고 복호화도 가능한 것
+        
+        단방향 암호화 : 암호화만 가능함 복호화 불가능
+        
+        솔팅 기법 (Spring Security에서 제공)
+        
+        ```
+        1111 + 2345 
+        1111 + 2321
+        ```
+        
+        평문 뒤에 매번 다른 랜덤값이 붙음
+        
+        pom.xml에 스프링 시큐리티 라이브러리 추가
+        
+        https://mvnrepository.com/artifact/org.springframework.security/spring-security-core/5.7.5
+        
+        ```xml
+        <dependency>
+        	    <groupId>org.springframework.security</groupId>
+        	    <artifactId>spring-security-core</artifactId>
+        	    <version>5.7.5</version>
+        		</dependency>
+        		<dependency>
+        	    <groupId>org.springframework.security</groupId>
+        	    <artifactId>spring-security-web</artifactId>
+        	    <version>5.7.5</version>
+        		</dependency>
+        		<dependency>
+        	    <groupId>org.springframework.security</groupId>
+        	    <artifactId>spring-security-config</artifactId>
+        	    <version>5.7.5</version>
+        		</dependency>
+        ```
+        
+        암호화 전과 암호화 후의 비밀번호 비교
+        
+		![image](https://github.com/recordmystory/08_spring-workspace/assets/113417749/d6ac331c-7380-4dce-8226-7d94597ee5e3)
+        
+    - alert 커스텀
+    
+    [AlertifyJS](https://alertifyjs.com/alert.html)
+    
+    [AlertifyJS](https://alertifyjs.com/guide.html)
+    
+    [alertifyjs.zip](https://prod-files-secure.s3.us-west-2.amazonaws.com/0d5eb3b6-72a2-4651-99fa-511798047979/16fa2dce-ffbe-4c8c-9ff8-476d68b4580c/alertifyjs.zip)
+    
+   ![image](https://github.com/recordmystory/08_spring-workspace/assets/113417749/600b230e-7815-4826-99af-1de2d37eaf90)
+    
+    해당 폴더내에 필요한 파일 추가
+    
+    사용법
+    
+    ```jsx
+    alertify.alert('${alertTitle}', '${alertMsg}');
+    ```
