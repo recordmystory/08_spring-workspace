@@ -15,12 +15,12 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public MemberDto selectMember(MemberDto m) {
-		return null;
+		return memberDao.selectMember(m);
 	}
 
 	@Override
 	public int selectUserIdCount(String checkId) {
-		return 0;
+		return memberDao.selectUserIdCount(checkId);
 	}
 
 	@Override
