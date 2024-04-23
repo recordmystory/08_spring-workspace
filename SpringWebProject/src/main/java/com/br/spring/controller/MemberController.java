@@ -1,7 +1,9 @@
 package com.br.spring.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,10 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.spring.dto.MemberDto;
 import com.br.spring.service.MemberService;
+import com.br.spring.util.FileUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	private final MemberService memberService;
 	private final BCryptPasswordEncoder bcryptPwdEncoder;
+	private final FileUtil fileUtil;
 	
 	//  --------------------------- 로그인 관련 ---------------------------
 	@PostMapping("/signin.do")
@@ -120,5 +125,52 @@ public class MemberController {
 		}
 		return "redirect:/"; // HomeController mainPage 메소드 실행 -> main.jsp 포워딩
 		// log.debug("암호화 후 member : {}", member);
+	}
+	
+	// --------------------------- 마이페이지 관련 ---------------------------
+	@GetMapping("/myinfo.page")
+	public String myInfo() {
+		return "member/myinfo";
+	}
+	
+	@ResponseBody
+	@PostMapping("/modifyProfile.do")
+	public String ajaxModifyProfile(MultipartFile uploadFile, HttpSession session) {
+		
+		MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+		String originalProfileUrl = loginUser.getProfileUrl(); // 기존 경로
+		
+		// 파일 업로드
+		Map<String, String> map = fileUtil.fileUpload(uploadFile, "profile"); // profile 폴더에 저장
+		loginUser.setProfileUrl(map.get("filePath") + "/" + map.get("filesystemName"));
+		
+		int result = memberService.updateProfileImg(loginUser);
+		
+		if(result > 0) {
+			if(originalProfileUrl != null) {
+				new File(originalProfileUrl).delete();
+			}
+			return "SUCCESS";
+		} else {
+			new File(map.get("filePath") + "/" + map.get("filesystemName")).delete(); // delete() : 파일 삭제
+			return "FAIL";
+		}
+	}
+	
+	@PostMapping("/modify.do")
+	public String modify(MemberDto member, RedirectAttributes redirectAttributes, HttpSession session) {
+		int result = memberService.updateMember(member);
+		
+		// 성공시 : alert 메시지, 세션에 Member 객체 갱신
+		// 실패시 : alert 메시지
+		redirectAttributes.addFlashAttribute("alertTitle", "회원 정보 수정 서비스");
+		if(result > 0) {
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 정보 수정 되었습니다.");
+			session.setAttribute("loginUser", memberService.selectMember(member));
+		} else {
+			redirectAttributes.addFlashAttribute("alertMsg", "정보수정에 실패했습니다.");				
+		}
+		
+		return "redirect:/member/myinfo.page";
 	}
 }

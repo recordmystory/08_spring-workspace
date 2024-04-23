@@ -17,7 +17,7 @@ public class FileUtil {
 		// 전달된 파일 업로드 처리
 		
 		// 1) 업로드시킬 폴더 (외부경로 : /upload/profile | board/yyyy/MM/dd)
-		String filePath = "/upload/" + folderName + new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+		String filePath = "/upload/" + folderName + new SimpleDateFormat("/yyyy/MM/dd").format(new Date());
 		
 		File  filePathDir = new File(filePath);
 		if(!filePathDir.exists()) {

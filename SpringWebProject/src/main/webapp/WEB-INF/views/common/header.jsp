@@ -38,7 +38,7 @@
         </c:when>
         <c:otherwise>
           <!-- 로그인 후  -->
-        	 <img src="${contextPath}${loginUser.profileUrl}">&nbsp;
+        	 <img src="${contextPath}<c:out value='${loginUser.profileUrl}' default='/resources/images/defaultProfile.png'/>">&nbsp;
           <span>${loginUser.userName}님</span> &nbsp;|&nbsp;
           <a href="${contextPath}/member/myinfo.page">마이페이지</a>
           <a href="${contextPath}/member/signout.do">로그아웃</a>
