@@ -19,7 +19,8 @@
 	
 	<!-- 로그인용 -->
 	<select id="selectMember" resultMap="MemberResultMap">
-		SELECT
+	<!-- 암호화 적용 전 -->
+		<!-- SELECT
 					USER_NO
 				, USER_ID
 				, USER_PWD
@@ -34,7 +35,24 @@
 			FROM MEMBER
 			WHERE STATUS IN ('Y', 'A')
 				AND USER_ID = #{userId}
-				AND USER_PWD = #{userPwd}
+				AND USER_PWD = #{userPwd} -->
+				
+	<!-- 암호화 적용 후 -->
+	 SELECT
+					USER_NO
+				, USER_ID
+				, USER_PWD
+				, USER_NAME
+				, EMAIL
+				, GENDER
+				, PHONE
+				, ADDRESS
+				, PROFILE_URL
+				, SIGNUP_DATE
+				, MODIFY_DATE
+			FROM MEMBER
+			WHERE STATUS IN ('Y', 'A')
+				AND USER_ID = #{userId}
 	</select>
 	
 	<!-- 아이디 중복체크용 쿼리 -->

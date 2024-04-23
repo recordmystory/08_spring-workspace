@@ -40,8 +40,15 @@ public class MemberController {
 		// 실행시킬 script문을 요청했던 페이지로 돌려주는 행위
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
+		
+		// 암호화 전 : 아이디와 비밀번호로 조회된 회원 검색
+		// 암호화 후 : 아이디로만 조회된 회원 객체
+		//			 loginUser.getUserPwd() : DB에 저장되어있는 암호문
+		// 			 매개변수 m.getUserPwd() : 로그인 요청 시 입력했던 평문 그대로의 비밀번호
+		
 		out.println("<script>");
-		if(loginUser != null) { // 조회결과가 있을 경우
+		if(loginUser != null && bcryptPwdEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) { // 암호화 후 로그인 성공시
+		// if(loginUser != null) { // 조회결과가 있을 경우
 			request.getSession().setAttribute("loginUser", loginUser);
 			out.println("alert('" + loginUser.getUserName() + "님 환영합니다.');");
 			out.println("location.href='" + request.getContextPath() + "';");
@@ -97,6 +104,10 @@ public class MemberController {
 		 * * case 2   Model1 생성     Model1 소멸      Model2 생성    Model2 유지
 		 * url 요청 -> controller -----------------> controller -> 포워딩 jsp
 		 * 						    redirect 방식
+		 * 
+		 * * case 3 RedirectAttributest1 생성							RedirectAttributes1 유지
+		 * url 요청 ---------> controller ----------> controller ----------> 포워딩
+		 * 				.addFlashAttribute 데이터 담기
 		 */
 		
 		// redirectAttributes : 2번째까지 데이터 유지됨
@@ -105,7 +116,7 @@ public class MemberController {
 			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 회원가입 되었습니다.");
 		} else {
 			redirectAttributes.addFlashAttribute("alertMsg", "회원가입에 실패했습니다.");
-			redirectAttributes.addFlashAttribute("historyBackYN", "Y");
+			redirectAttributes.addFlashAttribute("historyBackYN", "Y"); // 실패했을 경우 이전 페이지로 돌아가기 : history.back()
 		}
 		return "redirect:/"; // HomeController mainPage 메소드 실행 -> main.jsp 포워딩
 		// log.debug("암호화 후 member : {}", member);

@@ -38,7 +38,7 @@
         </c:when>
         <c:otherwise>
           <!-- 로그인 후  -->
-        	 <img src="${contextPath}/resources/images/defaultProfile.png">&nbsp;
+        	 <img src="${contextPath}${loginUser.profileUrl}">&nbsp;
           <span>${loginUser.userName}님</span> &nbsp;|&nbsp;
           <a href="${contextPath}/member/myinfo.page">마이페이지</a>
           <a href="${contextPath}/member/signout.do">로그아웃</a>
@@ -86,14 +86,15 @@
 
 <br clear="both">
 
-<script>
-	if('${alertMsg}' != ''){ // alert 메시지가 있을 경우
-		alertify.alert('${alertTitle}', '${alertMsg}');
-	}
+	<script>
+		if('${alertMsg}' != ''){ // alert 메시지가 있을 경우
+			alertify.alert('${alertTitle}', '${alertMsg}');
+		}
+		
+		if('${historyBackYN}' == 'Y'){
+			history.back();
+		}
+	</script>
 	
-	if('${historyBackYN}' == 'Y'){
-		history.back();
-	}
-</script>
 </body>
 </html>
