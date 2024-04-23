@@ -88,11 +88,11 @@
 
 	<script>
 		if('${alertMsg}' != ''){ // alert 메시지가 있을 경우
-			alertify.alert('${alertTitle}', '${alertMsg}');
-		}
-		
-		if('${historyBackYN}' == 'Y'){
-			history.back();
+			alertify.alert('${alertTitle}', '${alertMsg}', function(){
+				if('${historyBackYN}' == 'Y'){ // alert 확인 버튼 누른 후 실행될 코드
+					history.back();
+				}
+			});
 		}
 	</script>
 	

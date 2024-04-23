@@ -173,4 +173,24 @@ public class MemberController {
 		
 		return "redirect:/member/myinfo.page";
 	}
+	
+	@PostMapping("/leave.do")
+	public String leave(String userPwd, HttpSession session, RedirectAttributes redirectAttributes) {
+		// 현재 로그인한 회원 비번이랑 사용자가 입력한 비번값이 일치하는지
+		// session에 담겨있음  			userPwd
+		
+		MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "회원탈퇴 서비스");
+		if(bcryptPwdEncoder.matches(userPwd, loginUser.getUserPwd())) {
+			memberService.deleteMember(loginUser.getUserId());
+			redirectAttributes.addFlashAttribute("alertMsg", "회원탈퇴가 성공적으로 완료되었습니다. 그동안 이용해주셔서 감사합니다.");
+			session.invalidate();
+		} else { // 비밀번호 잘못 입력했을 경우
+			redirectAttributes.addFlashAttribute("alertMsg", "비밀번호가 틀렸습니다. 비밀번호를 다시 확인해주세요.");
+			redirectAttributes.addFlashAttribute("historyBackYN", "Y");
+		}
+		
+		return "redirect:/";
+	}
 }

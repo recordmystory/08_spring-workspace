@@ -92,8 +92,8 @@
                     <script>
                     	$(document).ready(function(){
                     		// loginUser.gender값과 일치하는 value값에 checked 속성 부여
-                    		$('input[name=gender]').filter('[value=${loginUser.gender}]').attr('checked', true);
-                    	});
+                            $("input[name=gender]").filter("[value=${loginUser.gender}]").attr("checked", true);
+                         });
                     </script>
                     
                 </div>
@@ -127,9 +127,9 @@
 			                        정말로 탈퇴 하시겠습니까?
                     </b>
 
-                    <form action="" method="post">
+                    <form action="${contextPath}/member/leave.do" method="post">
                         비밀번호 : 
-                        <input type="password" name="" required>
+                        <input type="password" name="userPwd" required>
 
                         <button type="submit" class="btn btn-danger">탈퇴하기</button>
                     </form>
