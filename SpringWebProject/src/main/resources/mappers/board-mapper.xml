@@ -1,4 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="boardMapper">
+<resultMap id="boardResult" type="BoardDto">
+	<id column="BOARD_NO" property="boardNo"/>
+	<result column="BOARD_TITLE" property="boardTitle"/>
+	<result column="USER_ID" property="boardWriter"/>
+	<result column="COUNT" property="count"/>
+	<result column="REGIST_DATE" property="registDate"/>
+	<result column="ATTACH_COUNT" property="attachCount"/>
+</resultMap>
+
+	<select id="selectBoardListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM BOARD
+		WHERE STATUS = 'Y'
+	</select>
+	
+	<select id="selectBoardList" resultMap="boardResult">
+		SELECT BOARD_NO
+		     , BOARD_TITLE
+		     , USER_ID
+		     , COUNT
+		     , TO_CHAR(REGIST_DATE, 'YYYY-MM-DD') AS REGIST_DATE
+		     , (SELECT COUNT(*) FROM ATTACHMENT WHERE REF_TYPE = 'B' AND REF_NO = BOARD_NO) AS ATTACH_COUNT
+		FROM BOARD B
+		JOIN MEMBER M ON (BOARD_WRITER = USER_NO)
+		WHERE B.STATUS = 'Y'
+		ORDER BY BOARD_NO DESC
+	</select>
+	
+	<select id="selectSearchListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM BOARD B
+		JOIN MEMBER M ON (BOARD_WRITER = USER_NO)
+		WHERE B.STATUS = 'Y'
+		    AND ${condition} LIKE '%' || #{keyword} || '%'
+	</select>
+	
+	<select id="selectSearchList" resultMap="boardResult">
+			SELECT BOARD_NO
+			     , BOARD_TITLE
+			     , USER_ID
+			     , COUNT
+			     , TO_CHAR(REGIST_DATE, 'YYYY-MM-DD') AS REGIST_DATE
+			     , (SELECT COUNT(*) FROM ATTACHMENT WHERE REF_TYPE = 'B' AND REF_NO = BOARD_NO) AS ATTACH_COUNT
+			FROM BOARD B
+			JOIN MEMBER M ON (BOARD_WRITER = USER_NO)
+			WHERE B.STATUS = 'Y'
+			    AND ${condition} LIKE '%' || #{keyword} || '%'
+			ORDER BY BOARD_NO DESC
+	</select>
+	
+	<insert id="insertBoard">
+		INSERT INTO 
+							BOARD
+									(
+											BOARD_NO
+										, BOARD_TITLE
+										,	BOARD_WRITER
+										,	BOARD_CONTENT
+									)
+									VALUES
+									(
+											SEQ_BNO.NEXTVAL
+										, #{boardTitle}
+										, #{boardWriter}
+										, #{boardContent}
+									)
+	</insert>
+	
+	<insert id="insertAttach">
+		INSERT INTO
+							ATTACHMENT
+							(
+									FILE_NO
+								,	FILE_PATH
+								,	FILESYSTEM_NAME
+								,	ORIGINAL_NAME
+								,	REF_TYPE
+								,	REF_NO
+							)
+							VALUES
+							(
+									SEQ_ANO.NEXTVAL
+								, #{filePath}
+								,	#{filesystemName}
+								, #{originalName}
+								, #{refType}
+								, SEQ_BNO.CURRVAL
+							)
+	</insert>
 </mapper>
