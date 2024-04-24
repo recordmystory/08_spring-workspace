@@ -1042,3 +1042,22 @@ COMMIT;
     ```jsx
     alertify.alert('${alertTitle}', '${alertMsg}');
     ```
+---
+#### 2024-04-23(화), 2024-04-24(수)
+### 암호화 및 복호화
+
+- bcryptPwdEncoder.matches(평문, 암호문)
+    
+    평문과 암호문을 비교
+    
+- 파일 삭제
+    
+    new File.delete()
+  
+### 페이징
+- Dao에서 페이징 시 rowBounds 사용해야함
+
+```
+	RowBounds rowBounds = new RowBounds(몇개의 게시글을 건너뛸지, 몇개 조회할건지);
+
+```
