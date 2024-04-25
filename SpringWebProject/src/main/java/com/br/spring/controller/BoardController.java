@@ -7,10 +7,12 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,6 +21,7 @@ import com.br.spring.dto.AttachDto;
 import com.br.spring.dto.BoardDto;
 import com.br.spring.dto.MemberDto;
 import com.br.spring.dto.PageInfoDto;
+import com.br.spring.dto.ReplyDto;
 import com.br.spring.service.BoardService;
 import com.br.spring.util.FileUtil;
 import com.br.spring.util.PagingUtil;
@@ -109,4 +112,47 @@ public class BoardController {
 		
 		return "redirect:/board/list.do";
 	}
+	
+	// 글 상세 관련
+	// 이 메소드 실행시 redirect가 곧바로 되기 때문에 url이 노출될 일 없음
+	@GetMapping("/increase.do") // /board/increase.do?no=글번호
+	public String increase(int no) { // 조회수 증가 ( 내 글이 아닌 게시글 클릭시에만 호출)
+		// log.debug("increase 메소드 실행");
+		
+		boardService.updateIncreaseCount(no);
+		
+		// 상세페이지 요청
+		return "redirect:/board/detail.do?no=" + no;
+	}
+	
+	@GetMapping("/detail.do") // /board/detail.do?no=글번호
+	public String detail(int no, Model model) { // 게시글 상세조회용 (내가 작성한 게시글 클릭시 곧바로 호출 | 수정완료 후 곧바로 호출)
+		// log.debug("detail 메소드 실행");
+		model.addAttribute("board", boardService.selectBoard(no));
+		
+		// 상세페이지에 필요한 데이터 담아서 포워딩
+		return "board/detail";
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/replyList.do", produces="application/json; charset=utf-8")
+	public List<ReplyDto> ajaxReplyList(int boardNo) {
+		return boardService.selectReplyList(boardNo);
+	}
+	
+	@ResponseBody
+	@PostMapping("/registReply.do")
+	public String ajaxInsertReply(ReplyDto reply, HttpSession session) {
+		MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+		reply.setReplyWriter(String.valueOf(loginUser.getUserNo()));
+		
+		return boardService.insertReply(reply) > 0 ? "SUCCESS" : "FAIL";
+	}
+	
+	@ResponseBody
+	@GetMapping("/removeReply.do")
+	public String ajaxDeleteReply(int replyNo) {
+		return boardService.deleteReply(replyNo) > 0 ? "SUCCESS" : "FAIL";
+	}
+	
 }

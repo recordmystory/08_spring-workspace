@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="boardMapper">
+
 <resultMap id="boardResult" type="BoardDto">
 	<id column="BOARD_NO" property="boardNo"/>
 	<result column="BOARD_TITLE" property="boardTitle"/>
@@ -8,8 +9,24 @@
 	<result column="COUNT" property="count"/>
 	<result column="REGIST_DATE" property="registDate"/>
 	<result column="ATTACH_COUNT" property="attachCount"/>
+	<result column="board_content" property="boardContent"/>
+	
+	<!-- * has many 관계일 경우 (collection 기능) -->
+	<!-- case 1) AttachDto 객체의 필드에 매핑시키는 resultMap이 따로 정의되어있지 않을 경우 -->
+	<collection ofType="AttachDto" property="attachList">
+		<result column="file_path" property="filePath"/>
+		<result column="filesystem_name" property="filesystemName"/>
+		<result column="original_name" property="originalName"/>
+	</collection>
 </resultMap>
 
+<resultMap id="replyResult" type="ReplyDto" >
+	<id column="REPLY_NO" property="replyNo"/>
+	<result column="REPLY_CONTENT" property="replyContent"/>
+	<result column="USER_ID" property="replyWriter"/>
+	<result column="REGIST_DATE" property="registDate"/>
+</resultMap>
+	
 	<select id="selectBoardListCount" resultType="_int">
 		SELECT COUNT(*)
 		FROM BOARD
@@ -90,4 +107,74 @@
 								, SEQ_BNO.CURRVAL
 							)
 	</insert>
+	
+	<update id="updateIncreaseCount">
+		UPDATE BOARD
+		SET COUNT = COUNT + 1
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+	
+	<!-- 한 쿼리로 하나의 게시글 정보 + 여러 개의 첨부파일 정보 -> BOARDDTO /* 첨부파일이 없는 게시글도 조회 */ -->
+	<select id="selectBoard" resultMap="boardResult">
+		SELECT BOARD_NO
+		     , BOARD_TITLE
+		     , USER_ID
+		     , BOARD_CONTENT
+		     , TO_CHAR(REGIST_DATE, 'YYYY-MM-DD') AS REGIST_DATE
+		     , FILE_PATH
+		     , FILESYSTEM_NAME
+		     , ORIGINAL_NAME
+		FROM BOARD B
+		JOIN MEMBER M ON (BOARD_WRITER = USER_NO)
+		LEFT JOIN ATTACHMENT ON (REF_TYPE = 'B' AND BOARD_NO = REF_NO) 
+		WHERE B.STATUS = 'Y'
+		    AND BOARD_NO = #{boardNo}
+	</select>
+	
+	<select id="selectReplyList" resultMap="replyResult">
+		<!-- SELECT (
+        SELECT COUNT(*) 
+        FROM REPLY
+        JOIN MEMBER ON USER_NO = REPLY_WRITER
+        ) AS REPLYCOUNT
+     , USER_ID
+     , REPLY_CONTENT
+     , R.REGIST_DATE AS REGIST_DATE
+		FROM REPLY R
+		JOIN BOARD ON REF_BNO = BOARD_NO
+		JOIN MEMBER ON USER_NO = REPLY_WRITER
+		WHERE REF_BNO = #{boardNo} -->
+		SELECT REPLY_NO
+					, REPLY_CONTENT
+					, USER_ID
+					, TO_CHAR(REGIST_DATE, 'YYYY-MM-DD') REGIST_DATE
+		FROM REPLY R
+		JOIN MEMBER ON (REPLY_WRITER = USER_NO)
+		WHERE R.STATUS = 'Y'
+			AND REF_BNO = #{boardNo}
+		ORDER BY REPLY_NO DESC
+	</select>
+	
+	<insert id="insertReply">
+		INSERT INTO REPLY
+            (
+                REPLY_NO
+              , REPLY_CONTENT
+              , REF_BNO
+              , REPLY_WRITER
+            )
+            VALUES
+            (
+                SEQ_RNO.NEXTVAL
+              , #{replyContent}
+              , #{refBoardNo}
+              , #{replyWriter}
+            )
+	</insert>
+	
+	<update id="deleteReply">
+		UPDATE REPLY
+		SET STATUS = 'N'
+		WHERE REPLY_NO = #{replyNo}
+	</update>
 </mapper>

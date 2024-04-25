@@ -59,22 +59,27 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public BoardDto selectBoard(int boardNo) {
-		return null;
+		return boardDao.selectBoard(boardNo);
 	}
 
 	@Override
 	public int updateIncreaseCount(int boardNo) {
-		return 0;
+		return boardDao.updateIncreaseCount(boardNo);
 	}
 
 	@Override
 	public List<ReplyDto> selectReplyList(int boardNo) {
-		return null;
+		return boardDao.selectReplyList(boardNo);
 	}
 
 	@Override
 	public int insertReply(ReplyDto reply) {
-		return 0;
+		return boardDao.insertReply(reply);
+	}
+	
+	@Override
+	public int deleteReply(int replyNo) {
+		return boardDao.deleteReply(replyNo);
 	}
 
 	@Override
@@ -86,5 +91,6 @@ public class BoardServiceImpl implements BoardService {
 	public int deleteBoard(int boardNo) {
 		return 0;
 	}
+
 
 }

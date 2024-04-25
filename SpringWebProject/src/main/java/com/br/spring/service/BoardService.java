@@ -36,4 +36,7 @@ public interface BoardService {
 	
 	// 게시판 삭제 서비스
 	int deleteBoard(int boardNo);
+	
+	// 댓글 삭제 서비스
+	int deleteReply(int replyNo);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.br.spring.dto.AttachDto;
 import com.br.spring.dto.BoardDto;
 import com.br.spring.dto.PageInfoDto;
+import com.br.spring.dto.ReplyDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -47,5 +48,25 @@ public class BoardDao {
 	
 	public int insertAttach(AttachDto at){
 		return sqlSessionTemplate.insert("boardMapper.insertAttach", at);		
+	}
+
+	public int updateIncreaseCount(int boardNo) {
+		return sqlSessionTemplate.update("boardMapper.updateIncreaseCount", boardNo);
+	}
+	
+	public BoardDto selectBoard(int boardNo) {
+		return sqlSessionTemplate.selectOne("boardMapper.selectBoard", boardNo);
+	}
+
+	public List<ReplyDto> selectReplyList(int boardNo) {
+		return sqlSessionTemplate.selectList("boardMapper.selectReplyList", boardNo);
+	}
+
+	public int insertReply(ReplyDto reply) {
+		return sqlSessionTemplate.insert("boardMapper.insertReply", reply);
+	}
+	
+	public int deleteReply(int replyNo) {
+		return sqlSessionTemplate.update("boardMapper.deleteReply", replyNo);
 	}
 }

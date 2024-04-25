@@ -22,4 +22,6 @@ public class ReplyDto {
 	private String replyWriter;
 	private String registDate;
 	private String status;
+	
+//	private int replyCount;
 }
