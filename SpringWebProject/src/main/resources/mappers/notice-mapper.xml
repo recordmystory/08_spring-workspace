@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="noticeMapper">
+	<resultMap id="noticeResult" type="NoticeDto">
+		<id column="NOTICE_NO" property="noticeNo"/>
+		<result column="NOTICE_TITLE" property="noticeTitle"/>
+		<result column="NOTICE_WRITER" property="noticeWriter"/>
+		<result column="NOTICE_CONTENT" property="noticeContent"/>
+		<result column="REGIST_DATE" property="registDate"/>
+	
+		<collection ofType="AttachDto" property="attachList">
+			<result column="file_path" property="filePath"/>
+			<result column="filesystem_name" property="filesystemName"/>
+			<result column="original_name" property="originalName"/>
+		</collection> 
+	</resultMap>
+	
+	<select id="selectNoticeList" resultMap="noticeResult">
+		SELECT NOTICE_NO
+		     , NOTICE_TITLE
+		     , USER_ID AS NOTICE_WRITER
+		     , TO_CHAR(REGIST_DATE, 'YYYY-MM-DD') AS REGIST_DATE
+		     , (SELECT COUNT(*) FROM ATTACHMENT WHERE REF_TYPE = 'N' AND REF_NO = NOTICE_NO) AS ATTACH_COUNT
+		FROM NOTICE N
+		JOIN MEMBER M ON (NOTICE_WRITER = USER_NO)
+		ORDER BY NOTICE_NO DESC
+	</select>
+
+	<select id="selectNoticeListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM NOTICE
+	</select>
+	
+	<insert id="insertNotice">
+		INSERT INTO
+						NOTICE
+						(
+							NOTICE_NO
+						, NOTICE_TITLE
+						,	NOTICE_WRITER
+						,	NOTICE_CONTENT
+						)
+						VALUES
+						(
+							SEQ_NNO.NEXTVAL
+						, #{noticeTitle}
+						, #{noticeWriter}
+						, #{noticeContent}
+						)
+	</insert>
+	
+	<insert id="insertAttach">
+		INSERT INTO
+							ATTACHMENT
+							(
+									FILE_NO
+								,	FILE_PATH
+								,	FILESYSTEM_NAME
+								,	ORIGINAL_NAME
+								,	REF_TYPE
+								,	REF_NO
+							)
+							VALUES
+							(
+									SEQ_ANO.NEXTVAL
+								, #{filePath}
+								,	#{filesystemName}
+								, #{originalName}
+								, #{refType}
+								, SEQ_NNO.CURRVAL
+							)
+	</insert>
+	
+	<select id="selectNotice" resultMap="noticeResult">
+		SELECT NOTICE_NO
+		     , NOTICE_TITLE
+		     , USER_ID AS NOTICE_WRITER
+		     , NOTICE_CONTENT
+		     , TO_CHAR(REGIST_DATE, 'YYYY-MM-DD') AS REGIST_DATE
+		     , FILE_PATH
+		     , FILESYSTEM_NAME
+		     , ORIGINAL_NAME
+		FROM NOTICE N
+		JOIN MEMBER M ON (NOTICE_WRITER = USER_NO)
+		LEFT JOIN ATTACHMENT ON (REF_TYPE = 'N' AND NOTICE_NO = REF_NO) 
+        WHERE NOTICE_NO = #{no}
+	</select>
+</mapper>

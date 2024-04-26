@@ -193,4 +193,26 @@ public class MemberController {
 		
 		return "redirect:/";
 	}
+	
+	@PostMapping("/modifyPwd.do")
+	public String updatePassword(String userPwd, String updatePwd, HttpSession session, RedirectAttributes redirectAttributes) {
+		MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "비밀번호 변경용 서비스");
+		if(bcryptPwdEncoder.matches(userPwd, loginUser.getUserPwd())) {
+			loginUser.setUserPwd(bcryptPwdEncoder.encode(updatePwd));
+			int result = memberService.updatePassword(loginUser);
+			if(result > 0) {
+				redirectAttributes.addFlashAttribute("alertMsg", "비밀번호 변경이 완료되었습니다.");				
+				session.setAttribute("loginUser", memberService.selectMember(loginUser));
+			} else {
+				redirectAttributes.addFlashAttribute("alertMsg", "비밀번호가 변경에 실패했습니다. 다시 시도해주세요.");				
+			}
+		} else { 
+			redirectAttributes.addFlashAttribute("alertMsg", "비밀번호가 틀렸습니다. 다시 입력해주세요.");
+		}
+		
+		return "redirect:/member/myinfo.page";
+		
+	}
 }

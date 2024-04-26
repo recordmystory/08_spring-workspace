@@ -16,4 +16,6 @@ public interface MemberService {
 	
 	// 회원탈퇴용 서비스
 	int deleteMember(String userId);
+
+	int updatePassword(MemberDto m);
 }
