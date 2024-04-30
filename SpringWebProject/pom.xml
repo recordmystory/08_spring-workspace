@@ -16,6 +16,13 @@
 	</properties>
 	<dependencies>
 	
+		<!-- 스프링 웹 소켓 라이브러리 -->
+		<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-websocket</artifactId>
+	    <version>${org.springframework-version}</version>
+		</dependency>
+		
 		<!-- * 스프링 시큐리티 모듈 라이브러리 (core, web, config) -->
 		<dependency>
 	    <groupId>org.springframework.security</groupId>

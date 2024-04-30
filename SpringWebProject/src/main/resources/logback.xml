@@ -6,9 +6,20 @@
 			<pattern>%-5level : [%date{HH:mm}] [%logger{0}:%line] - %msg%n</pattern>
 		</encoder>
 	</appender>
-
+	
+	<appender class="ch.qos.logback.core.ConsoleAppender" name="websocketLog">
+		<encoder>
+			<pattern>[%date{HH:mm}] - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
 	<logger name="org.springframework" level="info" />
 	<logger name="com.br.spring" level="debug" />
+
+	<!-- additivity를 false로 설정하면 root logger에 전달되지 않음 -->
+	<logger name="com.br.spring.handler" level="debug" additivity="false"> 
+		<appender-ref ref="websocketLog"/>
+	</logger>
 	
 	<logger name="jdbc.sqlonly" level="info"/> <!-- 쿼리문 -->
 	<logger name="jdbc.sqltiming" level="off"/> <!-- 쿼리문 + 실행시간 -->

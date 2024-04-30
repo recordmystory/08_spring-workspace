@@ -26,6 +26,7 @@
 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		<async-support>true</async-support> <!-- 웹 소켓 적용 시 추가해야되는 태그 (비동기 통신을 위해 사용해야함) -->
 	</servlet>
 		
 	<servlet-mapping>

@@ -13,12 +13,24 @@
 	
 	<!-- * has many 관계일 경우 (collection 기능) -->
 	<!-- case 1) AttachDto 객체의 필드에 매핑시키는 resultMap이 따로 정의되어있지 않을 경우 -->
+	<!-- 
 	<collection ofType="AttachDto" property="attachList">
 		<result column="file_path" property="filePath"/>
 		<result column="filesystem_name" property="filesystemName"/>
 		<result column="original_name" property="originalName"/>
-	</collection>
+	</collection> 
+	-->
+	
+	<!-- case 2) AttachDto 객체의 필드에 매핑시키는 resultMap이 따로 정의되어있을 경우 -->
+		<collection resultMap="attachResult" property="attachList" />
 </resultMap>
+
+<resultMap id="attachResult" type="AttachDto">
+		<id column="file_no" property="fileNo"/>
+		<result column="file_path" property="filePath"/>
+		<result column="filesystem_name" property="filesystemName"/>
+		<result column="original_name" property="originalName"/>
+</resultMap>	
 
 <resultMap id="replyResult" type="ReplyDto" >
 	<id column="REPLY_NO" property="replyNo"/>
