@@ -3,6 +3,7 @@ package com.br.spring.service;
 import java.util.List;
 import java.util.Map;
 
+import com.br.spring.dto.AttachDto;
 import com.br.spring.dto.BoardDto;
 import com.br.spring.dto.PageInfoDto;
 import com.br.spring.dto.ReplyDto;
@@ -39,4 +40,8 @@ public interface BoardService {
 	
 	// 댓글 삭제 서비스
 	int deleteReply(int replyNo);
+	
+	List<AttachDto> selectDelFileList(String[] delFileNo);
+	
+	int updateBoard(BoardDto board, String[] delFileNo);
 }

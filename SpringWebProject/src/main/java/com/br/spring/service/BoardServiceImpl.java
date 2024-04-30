@@ -1,5 +1,6 @@
 package com.br.spring.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +91,35 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int deleteBoard(int boardNo) {
 		return 0;
+	}
+
+	@Override
+	public List<AttachDto> selectDelFileList(String[] delFileNo) {
+		return delFileNo != null ? boardDao.selectDelFileList(delFileNo)
+								 : new ArrayList<AttachDto>();
+	}
+
+	@Override
+	public int updateBoard(BoardDto board, String[] delFileNo) {
+		
+		// 게시글 정보 update 
+		int result1 = boardDao.updateBoard(board);
+		
+		// 삭제할 첨부파일 정보 delete
+		int result2 = delFileNo == null ? 1
+										: boardDao.deleteAttach(delFileNo);
+		
+		// 새로운 첨부파일 정보 insert
+		List<AttachDto> list = board.getAttachList();
+		int result3 = 0;
+		for(AttachDto at : list) {
+			result3 += boardDao.insertAttach(at);
+		}
+		
+		return result1 == 1 
+				&& result2 > 0 
+					&& result3 == list.size() 
+						? 1 : -1;
 	}
 
 

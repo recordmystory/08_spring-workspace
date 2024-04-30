@@ -69,4 +69,16 @@ public class BoardDao {
 	public int deleteReply(int replyNo) {
 		return sqlSessionTemplate.update("boardMapper.deleteReply", replyNo);
 	}
+
+	public List<AttachDto> selectDelFileList(String[] delFileNo) {
+		return sqlSessionTemplate.selectList("boardMapper.selectDelFileList", delFileNo);
+	}
+
+	public int updateBoard(BoardDto board) {
+		return sqlSessionTemplate.update("boardMapper.updateBoard", board);
+	}
+
+	public int deleteAttach(String[] delFileNo) {
+		return sqlSessionTemplate.delete("boardMapper.deleteAttach", delFileNo);
+	}
 }

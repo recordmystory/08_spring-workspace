@@ -177,4 +177,40 @@
 		SET STATUS = 'N'
 		WHERE REPLY_NO = #{replyNo}
 	</update>
+	
+	<select id="selectDelFileList" resultMap="attachResult">
+		select
+					 file_no
+				 , file_path
+				 , filesystem_name
+				 , original_name
+		  from attachment
+		 <where>
+		 	<foreach item="item" collection="array"
+		 			open="file_no in (" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 </where>
+	</select>
+	
+	
+	<update id="updateBoard">
+		update
+					 board
+			 set board_title = #{boardTitle}
+			 	 , board_content = #{boardContent}
+		 where board_no = #{boardNo}
+	</update>
+	
+	<delete id="deleteAttach">
+		delete
+			from attachment
+		 <where>
+		 	<foreach item="item" collection="array"
+		 			open="file_no in (" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 </where>
+	</delete>
+	
 </mapper>

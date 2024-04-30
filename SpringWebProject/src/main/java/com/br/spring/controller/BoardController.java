@@ -1,5 +1,6 @@
 package com.br.spring.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -154,5 +155,65 @@ public class BoardController {
 	public String ajaxDeleteReply(int replyNo) {
 		return boardService.deleteReply(replyNo) > 0 ? "SUCCESS" : "FAIL";
 	}
+	
+	// * 게시글 수정 및 삭제 관련 --------------------------------------
+		@PostMapping("/modifyForm.page")
+		public String modifyForm(int no, Model model) {
+			model.addAttribute("board", boardService.selectBoard(no));
+			return "board/modifyForm";
+		}
+		
+		@PostMapping("/modify.do")
+		public String modify(BoardDto board, String[] delFileNo
+						   , List<MultipartFile> uploadFiles
+						   , RedirectAttributes redirectAttributes) {
+			
+			// 삭제할 파일에 대한 정보를 조회해두기 
+			List<AttachDto> delFileList = boardService.selectDelFileList(delFileNo);
+			
+			// 게시글 정보 수정 (update board)
+			
+			// 삭제할 첨부파일 => delete attachment + 파일자체를 삭제
+			// 추가할 첨부파일 => 파일들 업로드 + insert attachment
+			List<AttachDto> addFileList = new ArrayList<>();
+			for(MultipartFile uploadFile : uploadFiles) {
+				if(uploadFile != null && !uploadFile.isEmpty()) {
+					Map<String, String> map = fileUtil.fileUpload(uploadFile, "board");
+					addFileList.add( AttachDto.builder()
+											  .originalName(map.get("originalName"))
+											  .filePath(map.get("filePath"))
+											  .filesystemName(map.get("filesystemName"))
+											  .refType("B")
+											  .refNo(board.getBoardNo())
+											  .build() );
+				}
+			}
+			
+			board.setAttachList(addFileList);
+			// board : 글번호, 제목, 내용, 추가시킬첨부파일에대한정보(attachList)
+			
+			int result = boardService.updateBoard(board, delFileNo);
+			
+			redirectAttributes.addFlashAttribute("alertTitle", "게시글 수정 서비스");
+			if(result > 0) {
+				// 성공시
+				// => 삭제할 첨부파일이 있었다면 => 해당 파일 찾아서 삭제되도록
+				for(AttachDto at : delFileList) {
+					new File( at.getFilePath() + "/" + at.getFilesystemName() ).delete();
+				}
+				
+				redirectAttributes.addFlashAttribute("alertMsg", "게시글이 성공적으로 수정되었습니다.");			
+			}else {
+				// 실패시
+				redirectAttributes.addFlashAttribute("alertMsg", "게시글 수정에 실패하였습니다.");
+				redirectAttributes.addFlashAttribute("historyBackYN", "Y");
+			}
+			
+			return "redirect:/board/detail.do?no=" + board.getBoardNo();		
+			
+			
+			
+		}
+		
 	
 }
