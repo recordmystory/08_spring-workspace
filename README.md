@@ -1061,3 +1061,25 @@ COMMIT;
 	RowBounds rowBounds = new RowBounds(몇개의 게시글을 건너뛸지, 몇개 조회할건지);
 
 ```
+---
+#### 2024-04-30(화)
+### 웹 소켓 통신
+
+실시간 알람 및 실시간 채팅에 사용
+
+- pom.xml에 웹 소켓 라이브러리 추가
+    
+    https://mvnrepository.com/artifact/org.springframework/spring-websocket/5.3.27
+    
+- TextWebSocketHandler 메소드
+    
+    aterConnectionEstablished : 클라이언트와 연결되었을 때 처리할 내용을 정의
+    
+    handleMessage : 데이터(텍스트, 파일 등)가 웹소켓으로 전송되었을 때 처리할 내용을 정의
+    
+    afterConnectionClosed : 클라이언트와 연결이 끊겼을 때 처리할 내용을 정의
+    
+
+- Spring tool 공식 사이트
+    
+    https://spring.io/tools
