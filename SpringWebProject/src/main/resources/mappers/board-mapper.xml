@@ -225,4 +225,9 @@
 		 </where>
 	</delete>
 	
+	<delete id="deleteReplyCompletely">
+		DELETE
+				FROM REPLY
+		WHERE STATUS = 'N'
+	</delete>
 </mapper>

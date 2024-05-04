@@ -44,4 +44,8 @@ public interface BoardService {
 	List<AttachDto> selectDelFileList(String[] delFileNo);
 	
 	int updateBoard(BoardDto board, String[] delFileNo);
+	
+	// 댓글 완전 삭제 서비스 : 스케줄러에 의해서 실행
+	int deleteReplyCompletely();
+	
 }
